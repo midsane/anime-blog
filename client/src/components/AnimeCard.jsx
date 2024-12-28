@@ -4,8 +4,7 @@ import { ExternalLink, ChevronDown, ChevronUp, Smile, Meh,Frown, Clock, Disc, Tv
 import { useState } from 'react'
 
 export function AnimeCard({ anime, index }) {
-    const [isExpanded, setIsExpanded] = useState(false)
-    console.log(anime)
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <motion.div
