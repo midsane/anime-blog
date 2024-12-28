@@ -199,8 +199,7 @@ const Post = ({ val, setToastmsg, setAllPosts }) => {
 
                 <input type="text" name="studio" placeholder="studio" className="px-2 py-1 rounded" />
 
-                <label className="text-desc" htmlFor="date">release Date</label>
-                <input id="date" type="date" name="releaseDate" placeholder="releaseDate" className="text-dark" />
+                <input type="text" name="releaseDate" placeholder="releaseDate" className="px-2 py-1 rounded" />
 
                 <label className="text-desc" htmlFor="tags">Add Tags</label>
                 <div className="flex flex-col gap-4">
