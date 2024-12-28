@@ -90,12 +90,45 @@ try {
           {
             $lookup: {
               from: "posts",
-              localField: "List", 
-              foreignField: "_id", 
-              as: "posts", 
+              localField: "List",
+              foreignField: "_id",
+              as: "List",
+              pipeline: [
+                {
+                  $lookup: {
+                    from: "articles",
+                    localField: "recTitle",
+                    foreignField: "title",
+                    as: "recTitle",
+                    pipeline: [
+                      {
+                        $project: {
+                          title: 1,
+                          intro: 1,
+                          bannerImgLink: 1
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $addFields: {
+                    recTitle: {
+                      title: { $arrayElemAt: ["$recTitle.title", 0] },
+                      intro: { $arrayElemAt: ["$recTitle.intro", 0] },
+                      bannerImgLink: {
+                        $arrayElemAt: ["$recTitle.bannerImgLink", 0],
+                      },
+                    },
+                  },
+                },
+              ],
             },
           },
         ]);
+
+     
+
     
         if(!articleData){
              throw new ApiError(500, "could not find article details");

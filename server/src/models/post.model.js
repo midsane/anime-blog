@@ -5,6 +5,9 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
+  studio: {
+    type: String,
+  },
   rating: {
     type: String,
     required: true,
@@ -38,9 +41,8 @@ const PostSchema = new Schema({
     required: true,
   },
 
-  RecommendationTitle: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Article",
+  recTitle: {
+    type: String,
   },
   tags: {
     type: [String],
