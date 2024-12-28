@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Navbar } from "../components/navbar";
 import Lenis from '@studio-freight/lenis'
 import {Outlet} from "react-router-dom"
+import { Analytics } from "@vercel/analytics/next";
 import { useSetRecoilState } from "recoil";
 import { articlesAtom, articlesInfoLoadingAtom, latestArticleAtom } from "../atoms/atoms";
 export function RootLayout({children}){
@@ -59,6 +60,7 @@ export function RootLayout({children}){
         <Navbar />
         <div className="w-full pt-20 pb-10 px-2 sm:px-20">
             <Outlet>{children}</Outlet>
+            <Analytics />
         </div>
     </div>)
 }
