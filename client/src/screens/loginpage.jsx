@@ -1,19 +1,48 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AnimeLogo } from '../components/animelogo';
+import Toast from '../components/toaster';
+import { useNavigate } from "react-router-dom"
 
 export function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [toastMsg, setToastmsg] = useState("")
+    const navigate = useNavigate()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Login attempted with:', email, password);
+        try {
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify({email, password}),
+            })
+    
+            if (response.status > 300) {
+                setToastmsg("wrong credentials")
+            }
+
+            else{
+                const data = await response.json()
+                localStorage.setItem("token", "Bearer " + data?.message)
+                navigate("/admin")
+            } 
+
+        } catch (error) {
+            setToastmsg(error)
+            console.error('Error:', error)
+        }
+   
+
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background text-desc py-12 px-4 sm:px-6 lg:px-8">
+            {toastMsg !== "" &&
+            <Toast message={toastMsg} onClose={() => setToastmsg("")} />}
             <motion.div
                 className="max-w-md w-full space-y-8"
                 initial={{ opacity: 0, y: 50 }}
@@ -28,7 +57,7 @@ export function LoginPage() {
                     >
                         <AnimeLogo />
                     </motion.div>
-                    <h2 className="mt-6 text-3xl font-extrabold text-primary">Anime chronicles</h2>
+                    <h2 className="mt-6 text-3xl font-extrabold text-primary">Top Animes</h2>
                     <p className="mt-2 text-sm text-desc">
                         Admin{' '}
                         <a href="#" className="font-medium text-accent hover:text-opacity-80">

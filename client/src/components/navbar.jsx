@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AnimeLogo } from './animelogo';
 
 const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'About', href: '#' },
-    { name: 'Contact', href: '#' },
+    { name: 'Home', href: './' },
+    { name: 'About', href: '/' },
+    { name: 'Contact', href: '/' },
     { name: 'Login', href: '/login' }
 ];
 
@@ -34,9 +34,9 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
-                        <a href="#" className="flex items-center font-bold text-primary">
+                        <a href="/" className="flex items-center font-bold text-primary">
                             <AnimeLogo />
-                            <span className="ml-2 sm:text-2xl text-lg">Anime Chronicles</span>
+                            <span className="ml-2 sm:text-2xl text-lg">Top Animes</span>
                         </a>
                     </div>
                     <div className="hidden md:block">

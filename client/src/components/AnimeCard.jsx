@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 export function AnimeCard({ anime, index }) {
     const [isExpanded, setIsExpanded] = useState(false)
+    console.log(anime)
 
     return (
         <motion.div
@@ -13,7 +14,7 @@ export function AnimeCard({ anime, index }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
         >
-            <ImageCarousel images={anime.images} alt={anime.name} />
+            <ImageCarousel images={anime.imageLinks} alt={anime.name} />
             <div className="p-6">
                 <motion.h2
                     className="text-3xl font-bold text-name mb-2"
@@ -77,9 +78,11 @@ export function AnimeCard({ anime, index }) {
                     <p>Release Date: {anime.releaseDate}</p>
                     <p>Studio: {anime.studio}</p>
                 </div>
-                <p className="text-xs text-credits mt-4">{anime.imageCredits}</p>
-                <p className="text-xs text-credits mt-1">{anime.finalCredits}</p>
-                {anime.rec &&
+
+                <p className="text-xs text-credits mt-4">Sources: </p>
+                <p className="text-xs text-credits mt-1">{anime.imageCredits}</p>
+                <p className="text-xs text-credits mt-1">{anime.source}</p>
+                {anime.recTitle && anime.recTitle.length > 0 &&
                     <motion.div className='mt-2 cursor-pointer flex p-4 rounded bg-secondary flex-col gap-2'>
                         <div className='flex justify-between' >
 
@@ -87,10 +90,10 @@ export function AnimeCard({ anime, index }) {
                             <ExternalLink color='white' />
                         </div>
                         <div className='flex flex-col sm:flex-row overflow-hidden gap-6'>
-                            <img src={anime.rec.img} className='rounded h-20 object-cover' />
+                            <img alt={anime.recTitle.title} src={anime.recTitle.bannerImgLink} className='rounded h-20 object-cover' />
                             <div className='flex flex-col' >
-                                <p className='text-orange' >{anime.rec.title}</p>
-                                <p className='text-slate-300' >{anime.rec.desc}</p>
+                                <p className='text-orange' >{anime.recTitle.title}</p>
+                                <p className='text-slate-300' >{anime.recTitle.intro}</p>
                             </div>
                         </div>
                     </motion.div>}
@@ -100,6 +103,7 @@ export function AnimeCard({ anime, index }) {
 }
 
 const InfoTags = ({ content, val }) => {
+    if(!val) return
     let svg;
     let text = val
     let svgSize = 20
@@ -117,6 +121,7 @@ const InfoTags = ({ content, val }) => {
             }
             else if(val > 70) svg = <Meh size={svgSize} />
             else svg = <Frown size={svgSize} />
+            text += " %"
             break;
 
         case "Episodes":
@@ -131,11 +136,11 @@ const InfoTags = ({ content, val }) => {
             text += " Se."
 
     }
-    return (<div className='px-4 py-2 max-[400px]:px-2 bg-dark flex sm:gap-2 gap-1 justify-center items-center flex-col rounded-lg text-sm '>
-           <div className='flex gap-1 sm:gap-2 flex-col sm:flex-row justify-center items-center ' >
+    return (<div className='px-4 py-2 max-[400px]:px-2 flex sm:gap-2 gap-1 justify-center items-center flex-col rounded-lg text-sm '>
+           <div className='flex gap-1 sm:gap-2 flex-col justify-center items-center ' >
             <span>{svg}</span>
-            <p>{text}</p>
+            {text && <p>{text}</p>}
            </div>
-           <p className='max-[500px]:hidden block' >{content}</p>
+            <p className='max-[500px]:hidden block' >{content}</p>
     </div>)
 }

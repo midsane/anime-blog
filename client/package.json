@@ -10,13 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@studio-freight/lenis": "^1.0.42",
     "framer-motion": "^11.15.0",
+    "lucide-react": "^0.469.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@studio-freight/lenis": "^1.0.42",
-    "lucide-react": "^0.469.0",
     "react-router-dom": "^7.1.1",
     "react-slick": "^0.30.3",
+    "recoil": "^0.7.7",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {

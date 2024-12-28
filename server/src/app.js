@@ -33,6 +33,10 @@ const verifyToken = (req,res,next) => {
     next()
 }
 
+app.post("/admin", verifyToken, (req, res) => {
+  res.status(201).json({msg: "ok", status: 201})
+})
+
 app.post("/add-article", verifyToken,async (req, res) => {
   const data = req.body;
 

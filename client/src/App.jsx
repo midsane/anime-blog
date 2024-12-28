@@ -3,7 +3,8 @@ import { RootLayout } from "./screens/rootlayout"
 import HomePage from "./screens/homepage"
 import { AnimePage } from "./screens/animepage"
 import { LoginPage } from "./screens/loginpage"
-import { AdminPage } from "./screens/adminpage"
+import { AdminPage, Loader as AdminLoader } from "./screens/adminpage"
+import { RecoilRoot } from "recoil"
 
 const router = createBrowserRouter([
   {
@@ -11,26 +12,27 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        index:true,
+        index: true,
         element: <HomePage />
       },
       {
-        path:"anime/:animeTitle",
+        path: "anime/:articleTitle",
         element: <AnimePage />
       },
       {
-        path:"login",
+        path: "login",
         element: <LoginPage />
       },
       {
         path: "Admin",
-        element: <AdminPage />
+        element: <AdminPage />,
+        loader: AdminLoader
       }
     ]
   }
 ])
 function App() {
- return (<RouterProvider router={router} />)
+  return (<RecoilRoot><RouterProvider router={router} /></RecoilRoot>)
 
 }
 
