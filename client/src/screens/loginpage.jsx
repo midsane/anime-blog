@@ -21,6 +21,12 @@ export function LoginPage() {
                 body: JSON.stringify({email, password}),
             })
     
+
+            if (!response.ok) {
+                setToastmsg("wrong credentials")
+            }
+
+
             if (response.status > 300) {
                 setToastmsg("wrong credentials")
             }

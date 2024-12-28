@@ -19,6 +19,9 @@ export const Loader = async () => {
             },
         });
 
+        if(!response.ok){
+            return redirect("/");
+        }
 
         if (response.status >= 300) {
             return redirect("/");

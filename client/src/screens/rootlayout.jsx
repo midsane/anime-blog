@@ -12,16 +12,27 @@ export function RootLayout({children}){
 
     useEffect(() => {
         const getAllArticles = async () => {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-article`);
-            const data = await response.json()
-            setArticles(data.message)
-            const latestAr = []
-            for(let i=data.message.length-1; i>=0; i--){
-                latestAr.push(data.message[i]);
-                if(latestAr.length == 6) break;
-            }
-            setLatestArticle(latestAr)
-            setLoading(false)
+           try {
+             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-article`);
+ 
+             if (!response.ok) {
+                console.log(response)
+                 return
+             }
+ 
+             const data = await response.json()
+             setArticles(data.message)
+             const latestAr = []
+             for(let i=data.message.length-1; i>=0; i--){
+                 latestAr.push(data.message[i]);
+                 if(latestAr.length == 6) break;
+             }
+             setLatestArticle(latestAr)
+             setLoading(false)
+           } catch (error) {
+                console.log(error)
+                return
+           }
         }
         getAllArticles()
     }, [])

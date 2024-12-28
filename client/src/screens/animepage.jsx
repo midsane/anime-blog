@@ -8,21 +8,32 @@ import { useParams } from 'react-router-dom'
 
 export function AnimePage () {
     const [articleInfo, setArticleInfo] = useState(undefined)
+    const [toastMsg, setToastmsg] = useState("")
     const [loading, setLoading] = useState(true)
     const {articleTitle} = useParams()
     useEffect(() => {
         const getArticleInfo = async () => {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}article/${articleTitle}`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            const data = await response.json()
-            if(data.message){
-                setArticleInfo(data.message[0])
-            }
-            setLoading(false)
+          try {
+              const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}article/${articleTitle}`, {
+                  method: "POST",
+                  headers: {
+                      'Content-Type': 'application/json',
+                  }
+              });
+              if (!response.ok) {
+                  setLoading(false)
+                  setToastmsg("something went wrong")
+                  return
+              }
+              const data = await response.json()
+              if(data.message){
+                  setArticleInfo(data.message[0])
+              }
+              setLoading(false)
+          } catch (error) {
+              setLoading(false)
+              setToastmsg("something went wrong")
+          }
         }
         getArticleInfo()
     }, [])
