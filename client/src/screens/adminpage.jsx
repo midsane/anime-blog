@@ -97,10 +97,10 @@ export function AdminPage() {
 
                 <input ref={titleRef} type="text" placeholder="title" name="title" className="px-2 py-1 mt-2 rounded" />
 
-                <input ref={introRef} type="text" placeholder="bannerImgLink" name="bannerImgLink" className="px-2 py-1 mt-2 rounded" />
+                <input ref={bannerImgRef} type="text" placeholder="bannerImgLink" name="bannerImgLink" className="px-2 py-1 mt-2 rounded" />
 
                 <textarea
-                    ref={bannerImgRef}
+                    ref={introRef}
                     placeholder="intro"
                     name="intro"
                     className="px-2 py-1 rounded"
