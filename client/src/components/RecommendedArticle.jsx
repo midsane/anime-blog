@@ -12,9 +12,9 @@ export function RecommendedArticles() {
     
 
     return (
-        <section className="mt-16">
+        <section className="mt-2">
             <motion.h2
-                className="text-3xl font-bold text-primary mb-8 text-center"
+                className="text-3xl font-bold text-primary mb-10 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
