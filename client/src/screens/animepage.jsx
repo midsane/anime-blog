@@ -12,7 +12,7 @@ export function AnimePage () {
     const {articleTitle} = useParams()
     useEffect(() => {
         const getArticleInfo = async () => {
-            const response = await fetch("http://localhost:3000/article/"+articleTitle, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}article/${articleTitle}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

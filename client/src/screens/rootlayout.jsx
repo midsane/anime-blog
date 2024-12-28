@@ -12,7 +12,7 @@ export function RootLayout({children}){
 
     useEffect(() => {
         const getAllArticles = async () => {
-            const response = await fetch("http://localhost:3000/get-all-article");
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-article`);
             const data = await response.json()
             setArticles(data.message)
             const latestAr = []

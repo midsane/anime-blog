@@ -11,7 +11,7 @@ export const Loader = async () => {
             return redirect("/");
         }
 
-        const response = await fetch("http://localhost:3000/admin", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}admin`, {
             method: "POST",
             headers: {
                 Authorization: token,
@@ -60,7 +60,7 @@ export function AdminPage() {
         const token = localStorage.getItem("token");
 
        try {
-         const response = await fetch("http://localhost:3000/add-article", {
+           const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}add-article`, {
              method: "POST",
              headers: {
                  Authorization: token,
