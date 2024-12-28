@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { useRecoilValue } from 'recoil'
 import { articlesAtom, articlesInfoLoadingAtom } from '../atoms/atoms'
+import { useNavigate } from 'react-router-dom'
 
 
 
 export function RecommendedArticles() {
     
-   
+    const navigate = useNavigate()
     const articles = useRecoilValue(articlesAtom)
     const loading = useRecoilValue(articlesInfoLoadingAtom)
     
@@ -24,6 +25,7 @@ export function RecommendedArticles() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {articles?.map((article, index) => (
                     <motion.article
+                        onClick={() => navigate(`/anime/${article?.title} `)}
                         key={index}
                         className="bg-secondary rounded-lg shadow-lg overflow-hidden cursor-pointer"
                         initial={{ opacity: 0, y: 50 }}

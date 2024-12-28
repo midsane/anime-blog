@@ -5,11 +5,13 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import { useRecoilValue } from 'recoil'
 import { articlesInfoLoadingAtom, latestArticleAtom } from '../atoms/atoms'
+import { useNavigate } from 'react-router-dom'
 
 export function ArticlesCarousel() {
 
     const articles = useRecoilValue(latestArticleAtom)
     const loading = useRecoilValue(articlesInfoLoadingAtom)
+    const navigate = useNavigate()
     console.log(articles)
 
     useEffect(() => {
@@ -57,6 +59,7 @@ export function ArticlesCarousel() {
                 {articles?.map((article, index) => (
                     <div key={index} className="px-2">
                         <motion.article
+                            onClick={() => navigate(`/anime/${article.title}`)}
                             className="bg-secondary rounded-lg shadow-lg overflow-hidden h-96"
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
