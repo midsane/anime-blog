@@ -1,9 +1,13 @@
-import mongoose, {mongo, Schema} from "mongoose";
+import mongoose, { mongo, Schema } from "mongoose";
 
-const PostSchema = new Schema({
+const animeSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true
+  },
+  ageRating:{
+    type:String
   },
   studio: {
     type: String,
@@ -38,7 +42,6 @@ const PostSchema = new Schema({
   },
   source: {
     type: String,
-    required: true,
   },
 
   recTitle: {
@@ -46,12 +49,10 @@ const PostSchema = new Schema({
   },
   tags: {
     type: [String],
-    required: true,
   },
   releaseDate: {
     type: String,
-    required: true,
   },
 });
 
-export const Post = mongoose.model("Post", PostSchema)
+export const Anime = mongoose.model("Anime", animeSchema);

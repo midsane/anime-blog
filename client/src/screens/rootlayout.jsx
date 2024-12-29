@@ -2,14 +2,17 @@ import { useEffect } from "react";
 import { Navbar } from "../components/navbar";
 import Lenis from '@studio-freight/lenis'
 import {Outlet} from "react-router-dom"
-import { useSetRecoilState } from "recoil";
-import { articlesAtom, articlesInfoLoadingAtom, latestArticleAtom } from "../atoms/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+
+import { articlesAtom, articlesInfoLoadingAtom, latestArticleAtom, toastMsgAtom } from "../atoms/atoms";
+import Footer from "../components/footer";
+import { Toast } from "../components/toaster";
 export function RootLayout({children}){
 
     const setLoading = useSetRecoilState(articlesInfoLoadingAtom)
     const setArticles = useSetRecoilState(articlesAtom)
     const setLatestArticle = useSetRecoilState(latestArticleAtom)
-
+    const [toastMsg, setToastMsg] = useRecoilState(toastMsgAtom)
     useEffect(() => {
         const getAllArticles = async () => {
            try {
@@ -56,9 +59,12 @@ export function RootLayout({children}){
         }
     }, [])
     return(<div className="w-screen min-h-screen overflow-hidden">
+        {toastMsg !== "" &&
+            <Toast message={toastMsg} onClose={() => setToastMsg("")} />}
         <Navbar />
         <div className="w-full pt-20 pb-10 px-2 sm:px-20">
             <Outlet>{children}</Outlet>
         </div>
+        <Footer />
     </div>)
 }

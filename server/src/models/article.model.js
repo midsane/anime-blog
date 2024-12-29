@@ -14,8 +14,7 @@ const articleSchema = new Schema({
     required: true
   },
   List: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Post",
+    type: [String]
   }
 });
 

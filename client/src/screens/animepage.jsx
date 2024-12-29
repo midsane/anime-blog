@@ -4,11 +4,15 @@ import { AnimeCard } from '../components/AnimeCard'
 import {ChevronRight} from "lucide-react"
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { AdminLoader } from '../components/loader'
+import { useSetRecoilState } from 'recoil'
+import { toastMsgAtom } from '../atoms/atoms'
+import { AnimeLogo } from '../components/animelogo'
 
 
 export function AnimePage () {
     const [articleInfo, setArticleInfo] = useState(undefined)
-    const [toastMsg, setToastmsg] = useState("")
+    const setToastMsg = useSetRecoilState(toastMsgAtom)
     const [loading, setLoading] = useState(true)
     const {articleTitle} = useParams()
     useEffect(() => {
@@ -22,7 +26,7 @@ export function AnimePage () {
               });
               if (!response.ok) {
                   setLoading(false)
-                  setToastmsg("something went wrong")
+                  setToastMsg("something went wrong")
                   return
               }
               const data = await response.json()
@@ -32,7 +36,7 @@ export function AnimePage () {
               setLoading(false)
           } catch (error) {
               setLoading(false)
-              setToastmsg("something went wrong")
+              setToastMsg("something went wrong")
           }
         }
         getArticleInfo()
@@ -41,43 +45,67 @@ export function AnimePage () {
    
  
     return (
+       <>
+            <main className="relative min-h-screen sm:p-8 p-2">
+                {loading && <AdminLoader />}
 
-        <main className="min-h-screen bg-background sm:p-8 p-2">
-            <motion.h1
-                className="text-5xl md:text-7xl font-bold text-center text-primary mb-4 float"
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-               {articleInfo?.title}
-            </motion.h1>
-            <motion.p
-                className="text-xl text-center text-desc mb-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-            >
-                {articleInfo?.intro}
-            </motion.p>
-            <motion.div
-                className="flex flex-col bg-dark text-desc gap-3 p-8 rounded mb-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
-            >
-                <h3>Anime List in this article:</h3>
-                {articleInfo?.List?.map((a,i) => {
-                    return<div className='flex gap-2' ><ChevronRight /> <p>{a.name}</p></div>
-                })}
-            </motion.div>
-            
-            <div className="flex flex-col justify-center items-center gap-8">
-                {articleInfo?.List?.map((anime, index) => (
-                    <AnimeCard key={index} anime={anime} index={index} />
-                ))}
-            </div>
-            <ArticlesCarousel />
-        </main>
+                <motion.h1
+                    className="text-5xl md:text-7xl font-bold text-center text-primary mb-4 float"
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    {articleInfo?.title}
+                </motion.h1>
+                <motion.p
+                    className="text-xl text-center text-desc mb-12"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                    {articleInfo?.intro}
+                </motion.p>
+
+                <motion.div className='h-80 w-full overflow-hidden rounded' >
+                    <motion.div
+                        className="h-[20%] text-primary"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 20 }}
+                        transition={{ delay: 0.6, duration: 0.5 }}
+                    >
+                        <AnimeLogo />
+                    </motion.div>
+                    <div className='w-full h-[80%] overflow-hidden '>
+                        <motion.img
+                            initial={{ opacity: 0, y: 0 }}
+                            animate={{ opacity: 1, y: -50 }}
+                            transition={{ delay: 0.6, duration: 0.5 }}
+                            className='w-full' src={articleInfo?.bannerImgLink} />
+                    </div>
+                    
+                </motion.div>
+
+                <motion.div
+                    className="flex flex-col bg-dark text-desc gap-3 p-8 rounded mb-12"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.9, duration: 0.5 }}
+                >
+                    <h3>Anime List in this article:</h3>
+                    {articleInfo?.List?.map((a, i) => {
+                        return <div className='flex gap-2' ><ChevronRight /> <p>{a.name}</p></div>
+                    })}
+
+                </motion.div>
+
+                <div className="flex flex-col justify-center items-center gap-8">
+                    {articleInfo?.List?.map((anime, index) => (
+                        <AnimeCard key={index} anime={anime} index={index} />
+                    ))}
+                </div>
+                <ArticlesCarousel />
+            </main>
+       </>
     )
 }
 

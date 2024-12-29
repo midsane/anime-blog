@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { articlesInfoLoadingAtom, latestArticleAtom } from '../atoms/atoms'
 import { useNavigate } from 'react-router-dom'
 
-export function ArticlesCarousel() {
+export function ArticlesCarousel({ title ="Recommended Articles"}) {
 
     const articles = useRecoilValue(latestArticleAtom)
     const loading = useRecoilValue(articlesInfoLoadingAtom)
@@ -53,11 +53,11 @@ export function ArticlesCarousel() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                Recommended Articles
+                {title}
             </motion.h2>
             <Slider {...settings}>
                 {articles?.map((article, index) => (
-                    <div key={index} className="px-2">
+                    <div key={index} className="px-2 cursor-pointer">
                         <motion.article
                             onClick={() => navigate(`/anime/${article.title}`)}
                             className="bg-secondary rounded-lg shadow-lg overflow-hidden h-96"

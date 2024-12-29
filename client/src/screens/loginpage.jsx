@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AnimeLogo } from '../components/animelogo';
-import Toast from '../components/toaster';
+
 import { useNavigate } from "react-router-dom"
 
 export function LoginPage() {
@@ -47,8 +47,7 @@ export function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background text-desc py-12 px-4 sm:px-6 lg:px-8">
-            {toastMsg !== "" &&
-            <Toast message={toastMsg} onClose={() => setToastmsg("")} />}
+           
             <motion.div
                 className="max-w-md w-full space-y-8"
                 initial={{ opacity: 0, y: 50 }}

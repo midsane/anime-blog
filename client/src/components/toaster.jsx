@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const Toast = ({ message, onClose }) => {
+export const Toast = ({ message, onClose }) => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             onClose()
@@ -24,4 +24,4 @@ const Toast = ({ message, onClose }) => {
     );
 };
 
-export default Toast;
+

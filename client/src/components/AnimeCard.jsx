@@ -33,7 +33,7 @@ export function AnimeCard({ anime, index }) {
                     <InfoTags content="Format" val={anime.format} />
                     <InfoTags content="Rating" val={anime.rating} />
                     <InfoTags content="Duration" val={anime.duration} />
-                    <InfoTags content="Seasons" val={anime.seasons} />
+                    <InfoTags content="ageRating" val={anime.ageRating} />
                     <InfoTags content="Episodes" val={anime.episodes} />
 
                 </motion.div>
@@ -43,7 +43,7 @@ export function AnimeCard({ anime, index }) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
                 >
-                    {anime.tags.map((tag, i) => (
+                    {anime.tags && anime.tags.map((tag, i) => (
                         <span key={i} className="bg-stone-800 text-orange px-2 py-1 rounded text-sm">
                             {tag}
                         </span>
@@ -56,26 +56,26 @@ export function AnimeCard({ anime, index }) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4, duration: 0.5 }}
                 >
-                    {isExpanded ? anime.longDescription.length > 40
-                        ? anime.longDescription.slice(0, 40) + "..."
+                    {!isExpanded ? anime.longDescription.length > 200
+                        ? anime.longDescription.slice(0, 200) + "..."
                         : anime.longDescription :
                         anime.longDescription
                     }
 
                 </motion.p>
                 <span onClick={() => setIsExpanded(!isExpanded)} className='text-desc px-2 py-1 flex justify-between cursor-pointer w-fit gap-3 rounded bg-secondary'>{!isExpanded ?
-                    <> <p >View Less:</p>
-                        <ChevronUp color='yellow' /> </> :
+                    <> <p >View More:</p>
+                        <ChevronDown color='yellow' /> </> :
                     <>
-                        <p >View more:</p>
-                        <ChevronDown color='yellow' />
+                        <p >View Less:</p>
+                        <ChevronUp color='yellow' />
                     </>
 
                 } </span>
 
                 <div className="text-sm mt-4 text-date">
                     <p>Release Date: {anime.releaseDate}</p>
-                    <p>Studio: {anime.studio}</p>
+                    {anime.studio && <p>Studio: {anime.studio}</p>}
                 </div>
 
                 <p className="text-xs text-credits mt-4">Sources: </p>
@@ -105,14 +105,14 @@ const InfoTags = ({ content, val }) => {
     if(!val) return
     let svg;
     let text = val
-    let svgSize = 20
+    let svgSize = 18
     switch (content) {
         case "Format":
             if (val.toLowerCase() == "tv") {
                 svg = <Tv size={svgSize} />
-                text = "Tv"
             }
             else svg = <Disc size={svgSize} />
+            text=val
             break;
         case "Rating":
             if(val > 80){
@@ -125,21 +125,27 @@ const InfoTags = ({ content, val }) => {
 
         case "Episodes":
             svg = <Cat size={svgSize} />
-            text += " Eps"
+            if(text.length >= 3) text = "99+"
+            text += " Ep"
             break;
         case "Duration":
             svg = <Clock size={svgSize} />
+            text += " m"
             break;
-        case "Seasons":
-            svg = <Snowflake size={svgSize}  />
-            text += " Se."
+        case "ageRating":
+            svg = <Snowflake size={svgSize}/>
 
     }
-    return (<div className='px-4 py-2 max-[400px]:px-2 flex sm:gap-2 gap-1 justify-center items-center flex-col rounded-lg text-sm '>
+
+    text = text.slice(0,6)
+    return (<div className='px-4 bg-dark py-2 max-[400px]:px-2 flex sm:gap-2 gap-1 justify-center items-center flex-col rounded-lg text-sm '>
            <div className='flex gap-1 sm:gap-2 flex-col justify-center items-center ' >
             <span>{svg}</span>
             {text && <p>{text}</p>}
            </div>
-            <p className='max-[500px]:hidden block' >{content}</p>
     </div>)
+}
+
+const AgeRatingSvg = ({val}) => {
+    return<span><p className='font-bold text-primary' >{val}</p></span>
 }
