@@ -1,43 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "../components/navbar";
 import Lenis from '@studio-freight/lenis'
 import {Outlet} from "react-router-dom"
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { articlesAtom, articlesInfoLoadingAtom, latestArticleAtom, toastMsgAtom } from "../atoms/atoms";
+import { numberOfArticlesAtom, toastMsgAtom } from "../atoms/atoms";
 import Footer from "../components/footer";
 import { Toast } from "../components/toaster";
+import { AdminLoader } from "../components/loader";
 export function RootLayout({children}){
 
-    const setLoading = useSetRecoilState(articlesInfoLoadingAtom)
-    const setArticles = useSetRecoilState(articlesAtom)
-    const setLatestArticle = useSetRecoilState(latestArticleAtom)
     const [toastMsg, setToastMsg] = useRecoilState(toastMsgAtom)
+    const setNumberOfArticle = useSetRecoilState(numberOfArticlesAtom)
+ 
+    const [loading, setLoading] = useState(false)
+  
     useEffect(() => {
-        const getAllArticles = async () => {
-           try {
-             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-article`);
- 
-             if (!response.ok) {
+        const getNumberOfArticles = async () => {
+            setLoading(true)
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-number-of-article`);  
+            if (!response.ok) {
                 console.log(response)
-                 return
-             }
- 
-             const data = await response.json()
-             setArticles(data.message)
-             const latestAr = []
-             for(let i=data.message.length-1; i>=0; i--){
-                 latestAr.push(data.message[i]);
-                 if(latestAr.length == 6) break;
-             }
-             setLatestArticle(latestAr)
-             setLoading(false)
-           } catch (error) {
-                console.log(error)
                 return
-           }
+            }
+            const data = await response.json()
+            setNumberOfArticle(data.message)
+            setLoading(false)
         }
-        getAllArticles()
+        getNumberOfArticles()
     }, [])
 
     useEffect(() => {
@@ -58,7 +48,9 @@ export function RootLayout({children}){
             lenis.destroy()
         }
     }, [])
+
     return(<div className="w-screen min-h-screen overflow-hidden">
+        {loading && <AdminLoader />}
         {toastMsg !== "" &&
             <Toast message={toastMsg} onClose={() => setToastMsg("")} />}
         <Navbar />

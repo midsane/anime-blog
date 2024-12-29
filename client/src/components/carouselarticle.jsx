@@ -4,15 +4,13 @@ import { motion } from 'framer-motion'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import { useRecoilValue } from 'recoil'
-import { articlesInfoLoadingAtom, latestArticleAtom } from '../atoms/atoms'
+import { latestArticleAtom } from '../atoms/atoms'
 import { useNavigate } from 'react-router-dom'
 
 export function ArticlesCarousel({ title ="Recommended Articles"}) {
 
     const articles = useRecoilValue(latestArticleAtom)
-    const loading = useRecoilValue(articlesInfoLoadingAtom)
     const navigate = useNavigate()
-    console.log(articles)
 
     useEffect(() => {
         window.dispatchEvent(new Event('resize'))

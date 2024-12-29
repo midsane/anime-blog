@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useRecoilValue } from 'recoil'
-import { articlesAtom, articlesInfoLoadingAtom } from '../atoms/atoms'
+import { CurrentPageArticlesAtom } from '../atoms/atoms'
 import { useNavigate } from 'react-router-dom'
 import { ArticlesCarousel } from './carouselarticle'
 import { AdminLoader } from './loader'
@@ -10,13 +10,11 @@ import { AdminLoader } from './loader'
 export function RecommendedArticles() {
     
     const navigate = useNavigate()
-    const articles = useRecoilValue(articlesAtom)
-    const loading = useRecoilValue(articlesInfoLoadingAtom)
-    
-
+    const articles = useRecoilValue(CurrentPageArticlesAtom)
+  
     return (
       <>
-            {loading && <AdminLoader />}
+        
             <ArticlesCarousel title='Latest Articles' />
             <section className="mt-20">
                 <motion.h2

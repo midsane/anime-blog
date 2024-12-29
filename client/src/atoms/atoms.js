@@ -4,13 +4,8 @@ const latestArticleAtom = atom({
   default: [],
 });
 
-const articlesAtom = atom({
-  key: "articlesAtom",
-  default: [],
-});
-
-const articlesInfoLoadingAtom = atom({
-  key: "articlesInfoLoadingAtom",
+const CurrentPageArticlesAtom = atom({
+  key: "CurrentPageArticlesAtom",
   default: [],
 });
 
@@ -39,13 +34,18 @@ const articleListAtom = atom({
   default: []
 })
 
+const numberOfArticlesAtom = atom({
+  key: "numbersOfArticlesAtom",
+  default: 0
+})
+
 export {
   latestArticleAtom,
-  articlesAtom,
-  articlesInfoLoadingAtom,
+  CurrentPageArticlesAtom,
   articleIntroAtom,
   articleTitleAtom,
   articleBannerImgLinkAtom,
   toastMsgAtom,
-  articleListAtom
+  articleListAtom,
+  numberOfArticlesAtom
 };

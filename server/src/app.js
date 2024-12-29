@@ -74,6 +74,7 @@ app.post("/add-article", verifyToken, async(req, res) => {
       );
 })
 
+
 app.get("/get-all-anime", async(req, res) => {
   const allAnimes = await Anime.find({}).select("name imageLinks");
    if (!allAnimes) {
@@ -92,8 +93,30 @@ app.get("/get-all-anime", async(req, res) => {
 
 })
 
+app.get("/get-number-of-article", async(req, res) => {
+  const allArticles = await Article.find({});
+   res
+     .status(201)
+     .json(
+       new ApiResponse(
+         200,
+         allArticles.length,
+         "fetched all articles size successfully"
+       )
+     );
+})
+
 app.get("/get-all-article", async (req, res) => {
-  const allArticles = await Article.find({}).select(
+  const offset = parseInt(req.query.offset) || 0;
+  const limit = parseInt(req.query.limit) || 10; 
+
+   if (offset < 0 || limit <= 0) {
+     return res.status(400).json({ error: "Invalid offset or limit value" });
+   }
+
+  
+
+  const allArticles = await Article.find({}).skip(offset).limit(limit).select(
     "bannerImgLink title intro"
   );
   if (!allArticles) {
