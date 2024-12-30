@@ -1,4 +1,4 @@
-import { Plus, Save, Workflow, Eraser, Circle, Check} from "lucide-react"
+import { Plus, Save, Workflow, Eraser, Circle, Check, Search} from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { redirect } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -47,9 +47,7 @@ export const Loader = async () => {
 };
 
 export function AdminPage() {
-    const [newArticleView, setArticleView] = useState(false)
-    const [newAnimeView, setAnimeView] = useState(false)
-
+   
     return (<div className="flex flex-col md:flex-row min-w-full justify-center items-center gap-8">
         <ArticleMenu />
         <Post />
@@ -61,31 +59,53 @@ const ArticleMenu = () => {
     const [tab, setTab] = useState(1);
     const articleAnime = useRecoilValue(articleListAtom)
     const [allAnime, setAllAnime] = useState([])
-    const [toastMsg, setToastmsg] = useState("")
+    const setToastmsg = useSetRecoilState(toastMsgAtom)
     const [title, setTitle] = useRecoilState(articleTitleAtom)
     const [bannerImgLink, setBannerImgLink] = useRecoilState(articleBannerImgLinkAtom)
     const [intro, setIntro] = useRecoilState(articleIntroAtom)
-
+    const [searchAnime, setSearchAnime] = useState("")
+    const [debounce, setDebounce] = useState(Date.now())
+    const [animeLoading, setAnimeLoading] = useState(false)
     useEffect(() => {
+        setAnimeLoading(true)
         const getAllanimes = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-anime`);
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-anime/?name=${searchAnime}`, {
+                    method: "POST",
+                });
                 if (!response.ok || response.status >= 300) {
-
+                    setToastmsg(response.message || "something went wrong")
                 }
                 const data = await response.json();
-                if (data.status >= 300) {
-
+                if (data.statusCode >= 300) {
+                     setToastmsg(data.data)
                 }
                 setAllAnime(data.message)
+                setAnimeLoading(false)
             } catch (error) {
-                setToastmsg(err)
+                setToastmsg(error)
+                setAnimeLoading(false)
             }
 
         }
         getAllanimes();
 
-    }, [])
+    }, [debounce])
+
+    const ChangeDebounce = () => {
+        const currentTime = Date.now();
+        console.log("search anime changed")
+        console.log(currentTime - debounce)
+        if (currentTime - debounce >= 500){
+            setDebounce(currentTime)
+            console.log("debounce changed")
+        }
+            
+    }
+
+    useEffect(() => {
+        ChangeDebounce()
+    }, [searchAnime])
 
     return (<div className="flex flex-col min-w-[40vw] max-w-screen max-h-screen p-10 rounded bg-dark gap-2">
 
@@ -100,19 +120,22 @@ const ArticleMenu = () => {
             className="px-2 py-1 rounded"
         >
         </textarea>
-
+        <div className="flex gap-1 w-full">
+            <div className="w-[10%] border border-primary rounded cursor-pointer flex justify-center items-center" onClick={ChangeDebounce} ><Search color="white" /></div>
+            <input className="bg-secondary w-[90%] rounded text-desc p-1" placeholder="search.." value={searchAnime} onChange={(e) => setSearchAnime(e.target.value)} />
+        </div>
         <div className="flex">
             <Tab handleClick={setTab} tab={tab} goto={1} val="Article's anime" />
-            <Tab handleClick={setTab} tab={tab} goto={2} val="All anime's" />
+            <Tab handleClick={setTab} tab={tab} goto={2} val="All animes" />
         </div>
 
-        {tab === 1 ? <ShowAnimes tab={tab} List={articleAnime} /> : <ShowAnimes tab={tab} List={allAnime} />}
+        {tab === 1 ? <ShowAnimes tab={tab} List={articleAnime} /> : <ShowAnimes animeLoading={animeLoading} tab={tab} List={allAnime} />}
 
     </div>)
 }
 
 
-const ShowAnimes = ({ List, tab }) => {
+const ShowAnimes = ({animeLoading=false, List, tab }) => {
     const title = useRecoilValue(articleTitleAtom)
     const bannerImgLink = useRecoilValue(articleBannerImgLinkAtom)
     const intro = useRecoilValue(articleIntroAtom)
@@ -147,7 +170,25 @@ const ShowAnimes = ({ List, tab }) => {
         }
     }
 
-    return <div className="bg-blue-300  py-2 rounded text-desc text-md flex flex-col gap-2  overflow-y-scroll">
+    return <div className="bg-dark  py-2 rounded text-desc text-md flex flex-col gap-2  overflow-y-scroll">
+        {animeLoading && <AdminLoader />}
+        {List.length === 0 && (
+            <>
+                <svg className="m-auto rounded" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 200 200">
+                    <style>
+                        {`.icon { fill: #ffd10f; }
+                  .text { font-family: Arial, sans-serif; font-size: 16px; fill: #ffffff; }`}
+                    </style>
+                    <rect width="200" height="200" fill="#333333" rx="10" ry="10" />
+                    <g transform="translate(50, 50)">
+                        <path className="icon" d="M95 71V85C95 87.76 92.76 90 90 90H10C7.24 90 5 87.76 5 85V15C5 12.24 7.24 10 10 10H90C92.76 10 95 12.24 95 15V29L100 24V15C100 9.48 95.52 5 90 5H10C4.48 5 0 9.48 0 15V85C0 90.52 4.48 95 10 95H90C95.52 95 100 90.52 100 85V66L95 71ZM50 20L35 35H45V55H55V35H65L50 20ZM95 31.85L80.85 46H95V31.85ZM95 51H75V66H95V51Z" />
+                    </g>
+                    <text x="100" y="170" textAnchor="middle" className="text text-desc">No Animes Found</text>
+                </svg>
+            </>
+        )}
+
+
         {List.map((l, i) => <AnimeTab key={i} l={l} />)}
         {tab === 1 && <Button disabled={loading} placeholder={loading ? "Submitting" : "Submit"} handleClick={handleClick} />}
     </div>

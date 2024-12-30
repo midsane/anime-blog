@@ -5,6 +5,7 @@ import { Anime } from "./models/anime.js";
 import { ApiResponse } from "./utils/apiresponse.js";
 import ApiError from "./utils/apierror.js";
 import jwt from "jsonwebtoken";
+import { asyncHandler } from "./utils/asyncHandler.js";
 
 const app = express();
 
@@ -17,6 +18,16 @@ app.use(
 
 app.use(express.json({ limit: "17kb" }));
 app.use(express.static("public"));
+
+function getExactTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
 
 const verifyToken = (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
@@ -32,180 +43,228 @@ const verifyToken = (req, res, next) => {
   next();
 };
 
+app.get("/ping", () => {
+  const time = getExactTime();
+  console.log(`got successfully pinged at ${time}`);
+});
+
 app.post("/admin", verifyToken, (req, res) => {
   res.status(201).json({ msg: "ok", status: 201 });
 });
 
-app.post("/add-anime", verifyToken, async (req, res) => {
-  try {
-    const data = req.body;
-    const name = data.name;
-    const doesItExist = await Anime.find({name});
-    if(doesItExist && doesItExist.length > 0){
-       return res
-         .status(201)
-         .json(
-           new ApiResponse(400, {}, "this Anime already exist")
-         );
-    }
-    const newAnime = await Anime.create(data);
-    if (!newAnime) {
+app.post(
+  "/add-anime",
+  verifyToken,
+  asyncHandler(async (req, res) => {
+    try {
+      const data = req.body;
+      const name = data.name;
+      const doesItExist = await Anime.find({ name });
+      if (doesItExist && doesItExist.length > 0) {
+        return res
+          .status(201)
+          .json(new ApiResponse(400, {}, "this Anime already exist"));
+      }
+      const newAnime = await Anime.create(data);
+      if (!newAnime) {
+        throw new ApiError(500, error.message || "could not create anime");
+      }
+      res
+        .status(201)
+        .json(new ApiResponse(200, newAnime, "new Anime created successfully"));
+    } catch (error) {
       throw new ApiError(500, error.message || "could not create anime");
     }
-    res
-      .status(201)
-      .json(new ApiResponse(200, newAnime, "new Anime created successfully"));
-  } catch (error) {
-    throw new ApiError(500, error.message || "could not create anime");
-  }
-});
+  })
+);
 
-app.post("/add-article", verifyToken, async(req, res) => {
-  const data = req.body;
-  const newArticle = await Article.create(data);
-    if (!newArticle) {
-      throw new ApiError(500, "could not create new article");
+app.post(
+  "/add-article",
+  verifyToken,
+  asyncHandler(async (req, res) => {
+    const data = req.body;
+    try {
+      const newArticle = await Article.create(data);
+      if (!newArticle) {
+        throw new ApiError(500, "could not create new article");
+      }
+
+      res
+        .status(201)
+        .json(
+          new ApiResponse(200, newArticle, "created new article successfully")
+        );
+    } catch (error) {
+      throw new ApiError(500, error.message || "could not create anime");
+    }
+  })
+);
+
+app.post(
+  "/get-all-anime",
+  asyncHandler(async (req, res) => {
+    const typedName = req.query.name || "";
+    try {
+      const allAnimes = await Anime.find({
+        name: { $regex: typedName, $options: "i" },
+      }).select("name imageLinks");
+
+      if (!allAnimes) {
+        throw new ApiError(500, "could not find all animes");
+      }
+
+      res
+        .status(201)
+        .json(
+          new ApiResponse(200, allAnimes, "fetched all the animes successfully")
+        );
+    } catch (error) {
+      throw new ApiError(500, error.message || "could not create anime");
+    }
+  })
+);
+
+app.get(
+  "/get-number-of-article",
+  asyncHandler(async (req, res) => {
+    try {
+      const allArticles = await Article.find({});
+      res
+        .status(201)
+        .json(
+          new ApiResponse(
+            200,
+            allArticles.length,
+            "fetched all articles size successfully"
+          )
+        );
+    } catch (error) {
+      throw new ApiError(500, error.message || "could not fetch article size");
+    }
+  })
+);
+
+app.get(
+  "/get-all-article",
+  asyncHandler(async (req, res) => {
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+
+    if (offset < 0 || limit <= 0) {
+      throw new ApiError(400, "Invalid offset or limit value");
     }
 
-    res
-      .status(201)
-      .json(
-        new ApiResponse(200, newArticle, "created new article successfully")
+    try {
+      const allArticles = await Article.find({})
+        .skip(offset)
+        .limit(limit)
+        .select("bannerImgLink title intro");
+      if (!allArticles) {
+        throw new ApiError(500, "could not find all articles");
+      }
+
+      res
+        .status(201)
+        .json(
+          new ApiResponse(
+            200,
+            allArticles,
+            "fetched all the articles successfully"
+          )
+        );
+    } catch (error) {
+      throw new ApiError(
+        500,
+        error.message || error.msg || "could not find all articles"
       );
-})
+    }
+  })
+);
 
+app.post(
+  "/article/:title",
+  asyncHandler(async (req, res) => {
+    const { title } = req.params;
 
-app.get("/get-all-anime", async(req, res) => {
-  const allAnimes = await Anime.find({}).select("name imageLinks");
-   if (!allAnimes) {
-     throw new ApiError(500, "could not find all animes");
-   }
-
-   res
-     .status(201)
-     .json(
-       new ApiResponse(
-         200,
-         allAnimes,
-         "fetched all the animes successfully"
-       )
-     );
-
-})
-
-app.get("/get-number-of-article", async(req, res) => {
-  const allArticles = await Article.find({});
-   res
-     .status(201)
-     .json(
-       new ApiResponse(
-         200,
-         allArticles.length,
-         "fetched all articles size successfully"
-       )
-     );
-})
-
-app.get("/get-all-article", async (req, res) => {
-  const offset = parseInt(req.query.offset) || 0;
-  const limit = parseInt(req.query.limit) || 10; 
-
-   if (offset < 0 || limit <= 0) {
-     return res.status(400).json({ error: "Invalid offset or limit value" });
-   }
-
-  
-
-  const allArticles = await Article.find({}).skip(offset).limit(limit).select(
-    "bannerImgLink title intro"
-  );
-  if (!allArticles) {
-    throw new ApiError(500, "could not find all articles");
-  }
-
-  res
-    .status(201)
-    .json(
-      new ApiResponse(200, allArticles, "fetched all the articles successfully")
-    );
-});
-
-app.post("/article/:title", async (req, res) => {
-  const { title } = req.params;
-
-  try {
-    const articleData = await Article.aggregate([
-      {
-        $match: {
-          title,
+    try {
+      const articleData = await Article.aggregate([
+        {
+          $match: {
+            title,
+          },
         },
-      },
-      {
-        $lookup: {
-          from: "animes",
-          localField: "List",
-          foreignField: "name",
-          as: "List",
-          pipeline: [
-            {
-              $lookup: {
-                from: "articles",
-                localField: "recTitle",
-                foreignField: "title",
-                as: "recTitle",
-                pipeline: [
-                  {
-                    $project: {
-                      title: 1,
-                      intro: 1,
-                      bannerImgLink: 1,
+        {
+          $lookup: {
+            from: "animes",
+            localField: "List",
+            foreignField: "name",
+            as: "List",
+            pipeline: [
+              {
+                $lookup: {
+                  from: "articles",
+                  localField: "recTitle",
+                  foreignField: "title",
+                  as: "recTitle",
+                  pipeline: [
+                    {
+                      $project: {
+                        title: 1,
+                        intro: 1,
+                        bannerImgLink: 1,
+                      },
                     },
-                  },
-                ],
+                  ],
+                },
               },
-            },
-            {
-              $addFields: {
-                recTitle: {
-                  title: { $arrayElemAt: ["$recTitle.title", 0] },
-                  intro: { $arrayElemAt: ["$recTitle.intro", 0] },
-                  bannerImgLink: {
-                    $arrayElemAt: ["$recTitle.bannerImgLink", 0],
+              {
+                $addFields: {
+                  recTitle: {
+                    title: { $arrayElemAt: ["$recTitle.title", 0] },
+                    intro: { $arrayElemAt: ["$recTitle.intro", 0] },
+                    bannerImgLink: {
+                      $arrayElemAt: ["$recTitle.bannerImgLink", 0],
+                    },
                   },
                 },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-    ]);
+      ]);
 
-    console.log(articleData)
-    if (!articleData) {
-      throw new ApiError(500, "could not find article details");
-    }
+      console.log(articleData);
+      if (!articleData) {
+        throw new ApiError(500, "could not find article details");
+      }
 
-    res
-      .status(201)
-      .json(
-        new ApiResponse(
-          200,
-          articleData,
-          "fetched the details of the articles successfully"
-        )
+      res
+        .status(201)
+        .json(
+          new ApiResponse(
+            200,
+            articleData,
+            "fetched the details of the articles successfully"
+          )
+        );
+    } catch (error) {
+      throw new ApiError(
+        500,
+        error.message || "could not find article details"
       );
-  } catch (error) {
-    throw new ApiError(500, error.message || "could not find article details");
-  }
-});
+    }
+  })
+);
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (
     email != process.env.ADMIN_EMAIL ||
     password != process.env.ADMIN_PASSWORD
   ) {
-    throw new ApiError(403, "invalid Credentials");
+    return res
+      .status(403)
+      .json(new ApiResponse(403, {}, "invalid credentials"));
   }
 
   const jwtToken = jwt.sign(
