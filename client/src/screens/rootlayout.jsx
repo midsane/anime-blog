@@ -9,7 +9,7 @@ import { Toast } from "../components/toaster";
 import { AdminLoader } from "../components/loader";
 import { Goup } from "../components/Goup";
 export function RootLayout({children}){
-
+  
     const [toastMsg, setToastMsg] = useRecoilState(toastMsgAtom)
     const [numberOfArticle, setNumberOfArticle] = useRecoilState(numberOfArticlesAtom)
     const setLatestArticle = useSetRecoilState(latestArticleAtom)

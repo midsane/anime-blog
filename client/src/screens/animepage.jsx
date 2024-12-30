@@ -16,8 +16,13 @@ export function AnimePage() {
     const setToastMsg = useSetRecoilState(toastMsgAtom)
     const [loading, setLoading] = useState(true)
     const { articleTitle } = useParams()
-
+    
     useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
         const getArticleInfo = async () => {
             try {
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}article/${articleTitle}`, {
@@ -41,6 +46,7 @@ export function AnimePage() {
                 setToastMsg("something went wrong")
             }
         }
+        
         getArticleInfo()
     }, [articleTitle])
 
