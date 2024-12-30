@@ -2,9 +2,11 @@ import { motion } from 'framer-motion'
 import { ImageCarousel } from './ImageCarousel'
 import { ExternalLink, ChevronDown, ChevronUp, Smile, Meh,Frown, Clock, Disc, Tv, Snowflake, Cat } from "lucide-react"
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export function AnimeCard({ anime, index }) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const navigate = useNavigate()
 
     return (
         <motion.div
@@ -81,18 +83,21 @@ export function AnimeCard({ anime, index }) {
                 <p className="text-xs text-credits mt-4">Sources: </p>
                 <p className="text-xs text-credits mt-1">{anime.imageCredits}</p>
                 <p className="text-xs text-credits mt-1">{anime.source}</p>
+               
                 {anime.recTitle && anime.recTitle.length > 0 &&
-                    <motion.div className='mt-2 cursor-pointer flex p-4 rounded bg-secondary flex-col gap-2'>
+                    <motion.div 
+                    // onClick={() => navigate(`/anime/${anime.recTitle[0].title}`)}
+                    className='mt-2 cursor-pointer flex p-4 rounded bg-secondary flex-col gap-2'>
                         <div className='flex justify-between' >
 
                             <h4 className='text-name'>Recommended Read</h4>
                             <ExternalLink color='white' />
                         </div>
-                        <div className='flex flex-col sm:flex-row overflow-hidden gap-6'>
-                            <img alt={anime.recTitle.title} src={anime.recTitle.bannerImgLink} className='rounded h-20 object-cover' />
+                        <div className='flex flex-col 2xl:flex-row overflow-hidden gap-6'>
+                            <img alt={anime.recTitle[0].title} src={anime.recTitle[0].bannerImgLink} className='rounded h-20 object-cover' />
                             <div className='flex flex-col' >
-                                <p className='text-orange' >{anime.recTitle.title}</p>
-                                <p className='text-slate-300' >{anime.recTitle.intro}</p>
+                                <p className='text-orange' >{anime.recTitle[0].title}</p>
+                                <p className='text-slate-300' >{anime.recTitle[0].intro.slice(0,Math.min(anime.recTitle[0].intro.length, 20))+ "..." }</p>
                             </div>
                         </div>
                     </motion.div>}
