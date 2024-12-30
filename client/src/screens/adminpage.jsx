@@ -381,7 +381,14 @@ const Post = () => {
         }
 
         setRatingState(Math.round(info.averageRating))
-        imageLinks.push(info.coverImage.original || info.coverImage.large)
+        if(info.coverImage){
+            imageLinks.push(info.coverImage.original || info.coverImage.large)
+        }
+      
+        if (info.posterImage) {
+            imageLinks.push(info.posterImage.original || info.posterImage.large)
+        }
+
         setDescState(info.description)
         setEpisodesState(info.episodeCount)
         setDurationState(info.episodeLength)
