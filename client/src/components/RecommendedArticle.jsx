@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil'
 import { CurrentPageArticlesAtom } from '../atoms/atoms'
 import { useNavigate } from 'react-router-dom'
 import { ArticlesCarousel } from './carouselarticle'
+import { Helmet } from 'react-helmet-async';
 
 export function RecommendedArticles() {
     
@@ -11,7 +12,15 @@ export function RecommendedArticles() {
   
     return (
       <>
-        
+            <Helmet>
+                <title>{articles?.title || "Anime Page"}</title>
+                <meta name="description" content={articles?.intro || "Explore amazing anime articles and recommendations"} />
+
+                <meta property="og:title" content={articles?.title} />
+                <meta property="og:description" content={articles?.intro} />
+                <meta property="og:image" content={articles?.bannerImgLink} />
+                <meta property="og:type" content="article" />
+            </Helmet>
             <ArticlesCarousel title='Latest Articles' />
             <section className="mt-20">
                 <motion.h2

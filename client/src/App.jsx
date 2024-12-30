@@ -5,6 +5,7 @@ import { AnimePage } from "./screens/animepage"
 import { LoginPage } from "./screens/loginpage"
 import { AdminPage, Loader as AdminLoader } from "./screens/adminpage"
 import { RecoilRoot } from "recoil"
+import { HelmetProvider } from 'react-helmet-async';
 
 const router = createBrowserRouter([
   {
@@ -32,8 +33,11 @@ const router = createBrowserRouter([
   }
 ])
 function App() {
-  return (<RecoilRoot><RouterProvider router={router} /></RecoilRoot>)
-
+  return (<RecoilRoot>
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
+  </RecoilRoot>)
 }
 
 export default App

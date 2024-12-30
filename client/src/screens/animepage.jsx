@@ -1,52 +1,61 @@
 import { motion } from 'framer-motion'
 import { ArticlesCarousel } from '../components/carouselarticle'
 import { AnimeCard } from '../components/AnimeCard'
-import {ChevronRight, Dot} from "lucide-react"
+import { ChevronRight, Dot } from "lucide-react"
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AdminLoader } from '../components/loader'
 import { useSetRecoilState } from 'recoil'
 import { toastMsgAtom } from '../atoms/atoms'
 import { AnimeLogo } from '../components/animelogo'
+import { Helmet } from 'react-helmet-async';
 
 
-export function AnimePage () {
+export function AnimePage() {
     const [articleInfo, setArticleInfo] = useState(undefined)
     const setToastMsg = useSetRecoilState(toastMsgAtom)
     const [loading, setLoading] = useState(true)
-    const {articleTitle} = useParams()
+    const { articleTitle } = useParams()
 
     useEffect(() => {
         const getArticleInfo = async () => {
-          try {
-              const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}article/${articleTitle}`, {
-                  method: "POST",
-                  headers: {
-                      'Content-Type': 'application/json',
-                  }
-              });
-              if (!response.ok) {
-                  setLoading(false)
-                  setToastMsg("something went wrong")
-                  return
-              }
-              const data = await response.json()
-              if(data.message){
-                  setArticleInfo(data.message[0])
-              }
-              setLoading(false)
-          } catch (error) {
-              setLoading(false)
-              setToastMsg("something went wrong")
-          }
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}article/${articleTitle}`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                if (!response.ok) {
+                    setLoading(false)
+                    setToastMsg("something went wrong")
+                    return
+                }
+                const data = await response.json()
+                if (data.message) {
+                    setArticleInfo(data.message[0])
+                }
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                setToastMsg("something went wrong")
+            }
         }
         getArticleInfo()
     }, [articleTitle])
 
-   
- 
+
     return (
-       <>
+        <>
+            <Helmet>
+                <title>{articleInfo?.title || "Anime Page"}</title>
+                <meta name="description" content={articleInfo?.intro || "Explore amazing anime articles and recommendations"} />
+                <meta name="keywords" content={`${articleInfo?.title}, anime, anime recommendations, ${articleInfo?.List?.map(a => a.name).join(", ")}`} />
+                <meta property="og:title" content={articleInfo?.title} />
+                <meta property="og:description" content={articleInfo?.intro} />
+                <meta property="og:image" content={articleInfo?.bannerImgLink} />
+                <meta property="og:type" content="article" />
+            </Helmet>
             <main className="relative min-h-screen sm:p-8 p-2">
                 {loading && <AdminLoader />}
 
@@ -66,7 +75,7 @@ export function AnimePage () {
                         transition={{ delay: 0.6, duration: 0.5 }}
                     >
                         <AnimeLogo />
-                        <p className='text-sm sm:text-lg' >{articleInfo?.title.slice(19,Math.min(articleInfo?.title.length, 44))+"..."}</p>
+                        <p className='text-sm sm:text-lg' >{articleInfo?.title.slice(19, Math.min(articleInfo?.title.length, 44)) + "..."}</p>
                     </motion.div>
                     <div className='w-full overflow-hidden '>
                         <motion.img
@@ -75,7 +84,7 @@ export function AnimePage () {
                             transition={{ delay: 0.3, duration: 0.5 }}
                             className='object-contain w-full rounded min-h-40 aspect-auto' src={articleInfo?.bannerImgLink} />
                     </div>
-                    
+
                 </motion.div>
 
                 <motion.p
@@ -96,7 +105,7 @@ export function AnimePage () {
                 >
                     <div className='flex gap-2'>
                         <div><ChevronRight /> </div>
-                        <h3 className='text-lg sm:text-xl text-primary' >Anime List in this article:</h3>    
+                        <h3 className='text-lg sm:text-xl text-primary' >Anime List in this article:</h3>
                     </div>
                     {articleInfo?.List?.map((a, i) => {
                         return <div key={i} className='flex gap-2' ><div><Dot size={20} /></div> <p className='text-sm sm:text-lg' >{a.name}</p></div>
@@ -111,7 +120,7 @@ export function AnimePage () {
                 </div>
                 <ArticlesCarousel />
             </main>
-       </>
+        </>
     )
 }
 
