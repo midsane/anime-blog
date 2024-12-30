@@ -30,6 +30,7 @@ export function ImageCarousel({ images, alt }) {
                     className="absolute inset-0"
                 >
                     <img
+                        loading='lazy'
                         src={images[currentIndex]}
                         alt={`${alt} - Image ${currentIndex + 1}`}
                         className={`relative z-0 w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'}`}

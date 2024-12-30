@@ -259,7 +259,9 @@ const AnimeTab = ({ l }) => {
 
     return (<div className="flex gap-2 bg-secondary rounded">
         {loading && <AdminLoader />}
-        <img className="w-1/3 h-14 object-cover rounded" src={l.imageLinks[0]} />
+        <img 
+        loading='lazy'
+        className="w-1/3 h-14 object-cover rounded" src={l.imageLinks[0]} />
         <div className="flex flex-col gap-2 w-full">
             {l.name.length > 15 ? <p>{l.name.slice(0, 15)}...</p> : <p>{l.name}</p>}
             <div className="flex justify-between w-[90%]">

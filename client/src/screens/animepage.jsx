@@ -75,20 +75,20 @@ export function AnimePage() {
                 </motion.h1>
                 <motion.div className=' w-full h-32 sm:h-52 overflow-hidden rounded' >
                     <motion.div
-                        className="h-10 items-center flex gap-4 text-primary"
+                        className="h-8 items-center flex gap-4 text-primary"
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6, duration: 0.5 }}
+                        transition={{ delay: 0.8, duration: 0.5 }}
                     >
                         <AnimeLogo />
                         <p className='text-sm sm:text-lg' >{articleInfo?.title.slice(19, Math.min(articleInfo?.title.length, 44)) + "..."}</p>
                     </motion.div>
-                    <div className='w-full overflow-hidden '>
+                    <div className='w-full h-24 sm:h-44 overflow-hidden bg-dark'>
                         <motion.img
-                            initial={{ opacity: 0, y: 0 }}
-                            animate={{ opacity: 1, y: -100 }}
-                            transition={{ delay: 0.3, duration: 0.5 }}
-                            className='object-contain w-full rounded min-h-56 sm:min-h-80 aspect-auto' src={articleInfo?.bannerImgLink} />
+                            initial={{ opacity: 0, y:50 }}
+                            animate={{ opacity: 1, y:-50  }}
+                            transition={{ duration: 2 }}
+                            className=' min-w-full object-cover h-[150%] rounded aspect-auto' src={articleInfo?.bannerImgLink} />
                     </div>
 
                 </motion.div>

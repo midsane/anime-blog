@@ -72,6 +72,7 @@ export function ArticlesCarousel({ title = "Recommended Articles" }) {
                             whileTap={{ scale: 0.95 }}
                         >
                             <img
+                                loading='lazy'
                                 src={article.bannerImgLink}
                                 alt={`Banner for ${article.title}`}
                                 className="w-full h-40 object-cover"

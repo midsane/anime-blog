@@ -5,7 +5,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { CurrentPageArticlesAtom, latestArticleAtom, numberOfArticlesAtom } from "../atoms/atoms";
 import { AdminLoader } from "../components/loader";
 
-const PAGE_LIMIT = 10;
+const PAGE_LIMIT = 6;
 export default function HomePage(){
 
     const [currentPage, setCurrentPage] = useState(1)

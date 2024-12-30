@@ -54,6 +54,7 @@ export function RecommendedArticles() {
                             whileTap={{ scale: 0.95 }}
                         >
                             <img
+                                loading='lazy'
                                 src={article?.bannerImgLink || "/default-banner.jpg"}
                                 alt={`Banner for ${article?.title || "Unknown article"}`}
                                 className="w-full h-40 object-cover"

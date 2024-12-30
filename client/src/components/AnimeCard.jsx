@@ -119,6 +119,7 @@ export function AnimeCard({ anime, index }) {
                             </div>
                             <div className="flex flex-col 2xl:flex-row overflow-hidden gap-6">
                                 <img
+                                    loading='lazy'
                                     alt={anime.recTitle[0].title}
                                     src={anime.recTitle[0].bannerImgLink}
                                     className="rounded h-20 object-cover"
