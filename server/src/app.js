@@ -52,6 +52,15 @@ app.post("/admin", verifyToken, (req, res) => {
   res.status(201).json({ msg: "ok", status: 201 });
 });
 
+app.delete("/delete-anime/:name", verifyToken, asyncHandler(async(req, res) => {
+  const {name} = req.params
+  const data = await Anime.deleteOne({name});
+  if(!data) throw new ApiError(500, "could not delete anime");
+   res
+     .status(201)
+     .json(new ApiResponse(200, name, "Anime deleted successfully"));
+}))
+
 app.post(
   "/add-anime",
   verifyToken,
