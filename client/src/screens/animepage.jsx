@@ -86,9 +86,9 @@ export function AnimePage() {
                     <div className='w-full overflow-hidden '>
                         <motion.img
                             initial={{ opacity: 0, y: 0 }}
-                            animate={{ opacity: 1, y: -50 }}
+                            animate={{ opacity: 1, y: -100 }}
                             transition={{ delay: 0.3, duration: 0.5 }}
-                            className='object-contain w-full rounded min-h-40 aspect-auto' src={articleInfo?.bannerImgLink} />
+                            className='object-contain w-full rounded min-h-56 sm:min-h-80 aspect-auto' src={articleInfo?.bannerImgLink} />
                     </div>
 
                 </motion.div>
