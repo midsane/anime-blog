@@ -1,4 +1,7 @@
-import { Plus, Save, Workflow, Eraser, Circle, Check, Search} from "lucide-react"
+import {
+    Plus, Save, Workflow, Eraser, Circle, Check, Search,
+    Trash
+} from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { redirect } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -47,7 +50,7 @@ export const Loader = async () => {
 };
 
 export function AdminPage() {
-   
+
     return (<div className="flex flex-col md:flex-row min-w-full justify-center items-center gap-8">
         <ArticleMenu />
         <Post />
@@ -57,6 +60,7 @@ export function AdminPage() {
 const ArticleMenu = () => {
 
     const [tab, setTab] = useState(1);
+    const [loading, setLoading] = useState(false)
     const articleAnime = useRecoilValue(articleListAtom)
     const [allAnime, setAllAnime] = useState([])
     const setToastmsg = useSetRecoilState(toastMsgAtom)
@@ -78,7 +82,7 @@ const ArticleMenu = () => {
                 }
                 const data = await response.json();
                 if (data.statusCode >= 300) {
-                     setToastmsg(data.data)
+                    setToastmsg(data.data)
                 }
                 setAllAnime(data.message)
                 setAnimeLoading(false)
@@ -94,36 +98,67 @@ const ArticleMenu = () => {
 
     const ChangeDebounce = () => {
         const currentTime = Date.now();
-     
-        if (currentTime - debounce >= 500){
+
+        if (currentTime - debounce >= 500) {
             setDebounce(currentTime)
-            
+
         }
-            
+
     }
 
     useEffect(() => {
         ChangeDebounce()
     }, [searchAnime])
 
-    return (<div className="flex flex-col min-w-[40vw] max-w-screen max-h-screen p-10 rounded bg-dark gap-2">
+    const getBannerImg = async () => {
+        setLoading(true)
+        if (title.length <= 18) {
+            setToastmsg("invalid article title");
+            setLoading(false)
+            return;
+        }
+        const animeName = title.slice(19, title.length);
+        const response = await fetch(`https://kitsu.io/api/edge/anime?filter[text]=${animeName}`)
 
+        const data = await response.json();
+        if (!data) {
+            setToastmsg("something went wrong in fetching banner img")
+            setLoading(false)
+            return;
+        }
+        const info = data?.data[0]?.attributes
+        if (!info) {
+            setToastmsg("something went wrong in fetching banner img")
+            setLoading(false)
+            return;
+        }
+        setLoading(false)
+        setBannerImgLink(info.coverImage.large || info.coverImage.original)
+
+    }
+
+    return (<div className="flex justify-center items-center flex-col min-w-[40vw] max-w-screen max-h-screen p-10 rounded bg-dark gap-2">
+        {loading && <AdminLoader />}
         <Input limitSize={false} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="title" />
-        <Input limitSize={false} value={bannerImgLink} onChange={(e) => setBannerImgLink(e.target.value)} placeholder="bannerImgLink" />
+        <div className="max-w-32 flex gap-1 justify-center items-center" >
+            <Input size="small" limitSize={false} value={bannerImgLink} onChange={(e) => setBannerImgLink(e.target.value)} placeholder="bannerImgLink" />
+            <div className="mt-2 cursor-pointer active:scale-90 hover:scale-105 bg-dark flex justify-center h-fit w-fit items-center border rounded p-1" onClick={getBannerImg} ><Workflow color="orange" size={20} /></div>
+        </div>
 
         <textarea
             value={intro}
             onChange={(e) => setIntro(e.target.value)}
             placeholder="intro"
             name="intro"
-            className="px-2 py-1 rounded"
+            className="px-2 py-1 rounded w-56"
         >
         </textarea>
-        <div className="flex gap-1 w-full">
-            <div className="w-[10%] border border-primary rounded cursor-pointer flex justify-center items-center" onClick={ChangeDebounce} ><Search color="white" /></div>
-            <input className="bg-secondary w-[90%] rounded text-desc p-1" placeholder="search.." value={searchAnime} onChange={(e) => setSearchAnime(e.target.value)} />
+        <div className="w-56 rounded  justify-between bg-secondary flex">
+            <div className="w-12 p-2 rounded cursor-pointer bg-primary " onClick={ChangeDebounce} ><Search color="black" /></div>
+            <input className="bg-secondary rounded w-40 text-desc p-2" placeholder="search.." value={searchAnime} onChange={(e) => setSearchAnime(e.target.value)} />            
         </div>
-        <div className="flex">
+
+        <div className="flex w-56">
             <Tab handleClick={setTab} tab={tab} goto={1} val="Article's anime" />
             <Tab handleClick={setTab} tab={tab} goto={2} val="All animes" />
         </div>
@@ -134,7 +169,7 @@ const ArticleMenu = () => {
 }
 
 
-const ShowAnimes = ({animeLoading=false, List, tab }) => {
+const ShowAnimes = ({ animeLoading = false, List, tab }) => {
     const title = useRecoilValue(articleTitleAtom)
     const bannerImgLink = useRecoilValue(articleBannerImgLinkAtom)
     const intro = useRecoilValue(articleIntroAtom)
@@ -152,12 +187,12 @@ const ShowAnimes = ({animeLoading=false, List, tab }) => {
                     Authorization: token,
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify({ title, bannerImgLink, intro, List:listData })
+                body: JSON.stringify({ title, bannerImgLink, intro, List: listData })
             })
-          
+
             const data = await response.json()
-            if (data.statusCode >= 300){
-     
+            if (data.statusCode >= 300) {
+
                 setToastMsg(data.data || "could not save article")
                 setLoading(false)
                 return
@@ -170,7 +205,7 @@ const ShowAnimes = ({animeLoading=false, List, tab }) => {
         }
     }
 
-    return <div className="bg-dark  py-2 rounded text-desc text-md flex flex-col gap-2  overflow-y-scroll">
+    return <div className="bg-dark  py-2 min-w-60 rounded text-desc text-md flex flex-col gap-2  overflow-y-scroll">
         {animeLoading && <AdminLoader />}
         {List.length === 0 && (
             <>
@@ -190,29 +225,60 @@ const ShowAnimes = ({animeLoading=false, List, tab }) => {
 
 
         {List.map((l, i) => <AnimeTab key={i} l={l} />)}
+        <div><p>Total count: {List.length}</p></div>
         {tab === 1 && <Button disabled={loading} placeholder={loading ? "Submitting" : "Submit"} handleClick={handleClick} />}
     </div>
 }
 
-const AnimeTab = ({l}) => {
+const AnimeTab = ({ l }) => {
     const articleList = useRecoilValue(articleListAtom)
     const inArticle = articleList.some(anime => anime.name === l.name)
+    const [loading, setLoading] = useState(false)
+    const setToastMsg = useSetRecoilState(toastMsgAtom)
+
+    const handleDelete = async () => {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}delete-anime/${l.name}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: token,
+                'Content-Type': "application/json"
+            }
+        })
+        const data = await response.json();
+        if (data.statusCode >= 300) {
+            setLoading(false);
+            setToastMsg("could not delete " + l.name + data.data);
+            return;
+        }
+        setToastMsg('successfully deleted ' + l.name);
+        setLoading(false)
+
+    }
+
     return (<div className="flex gap-2 bg-secondary rounded">
+        {loading && <AdminLoader />}
         <img className="w-1/3 h-14 object-cover rounded" src={l.imageLinks[0]} />
-        <div className="flex flex-col gap-2">
-            <p>{l.name}</p>
-            {inArticle ? <SvgWrapper l={l} svg={<Check color="lightGreen" size={18} />} /> : <SvgWrapper l={l} svg={<Circle color="orange" size={18} />} />}
+        <div className="flex flex-col gap-2 w-full">
+            {l.name.length > 15 ? <p>{l.name.slice(0, 15)}...</p> : <p>{l.name}</p>}
+            <div className="flex justify-between w-[90%]">
+
+                {inArticle ? <SvgWrapper l={l} svg={<Check color="lightGreen" size={18} />} /> : <SvgWrapper l={l} svg={<Circle color="orange" size={18} />} />}
+
+                <div className="hover:scale-105 active:scale-90 cursor-pointer" onClick={handleDelete} ><Trash color="red" size={18} /></div>
+            </div>
         </div>
     </div>)
 }
 
-const SvgWrapper = ({svg, l}) => {
+const SvgWrapper = ({ svg, l }) => {
     const setArticleList = useSetRecoilState(articleListAtom)
     const handleClick = () => {
         setArticleList(prev => {
             let newList;
             const inArticle = prev.some(anime => anime.name === l.name)
-            if(inArticle){
+            if (inArticle) {
                 newList = prev.filter(anime => anime.name !== l.name)
             }
             else newList = [...prev, l]
@@ -225,25 +291,26 @@ const SvgWrapper = ({svg, l}) => {
 
 
 const Post = () => {
-    const [toastMsg, setToastmsg] = useRecoilState(toastMsgAtom)
+    const setToastmsg = useSetRecoilState(toastMsgAtom)
     const [TagsList, setTagsList] = useState([])
     const [Tag, setTag] = useState("");
     const [loading, setLoading] = useState(false)
     const [imageLinks, setImageLinks] = useState([])
-    const linkRef = useRef()
+    const [link, setLink] = useState("")
+
 
     const animeNameRef = useRef();
 
     const [ratingState, setRatingState] = useState("")
-   
+
     const [durationState, setDurationState] = useState("")
-   
+
     const [episodesState, setEpisodesState] = useState("")
- 
+
     const [formatState, setFormatState] = useState("")
-   
+
     const [imageCreditsState, setImageCreditsState] = useState("")
- 
+
     const [sourceState, setSourceState] = useState("")
     const [recTitleState, setRecTitleState] = useState("")
 
@@ -253,10 +320,10 @@ const Post = () => {
     const [descState, setDescState] = useState("")
     const [ageRatingState, setAgeRatingState] = useState("");
 
-    const SavePost = async(e) => {
+    const SavePost = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.target)
-       
+
         const anime = {}
         formData.forEach((value, key) => {
             anime[key] = value;
@@ -268,43 +335,50 @@ const Post = () => {
         setLoading(true)
         const token = localStorage.getItem("token")
         try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}add-anime`, {
-                    method: "POST",
-                    headers: {
-                        Authorization: token,
-                        'Content-Type': "application/json"
-                    },
-                    body: JSON.stringify(anime)
-                })
-           
-                const data = await response.json()
-                
-                if(data.statusCode >= 300){
-                    setToastmsg(data?.data || "cannot save this anime")
-                    setLoading(false)
-                    return;
-                }
-                setToastmsg("saved anime "+anime['name']);
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}add-anime`, {
+                method: "POST",
+                headers: {
+                    Authorization: token,
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify(anime)
+            })
+
+            const data = await response.json()
+
+            if (data.statusCode >= 300) {
+                setToastmsg(data?.data || "cannot save this anime")
                 setLoading(false)
-        } catch (error) {
-                setToastmsg(error?.message || "cannot save this anime")
-                setLoading(false)
+                return;
             }
-        
+            setToastmsg("saved anime " + anime['name']);
+            setLoading(false)
+        } catch (error) {
+            setToastmsg(error?.message || "cannot save this anime")
+            setLoading(false)
+        }
+
     }
 
-    const AutoFill = async() => {
-        if(animeNameRef.current.value?.trim() === ""){
-            
+    const AutoFill = async () => {
+        if (animeNameRef.current.value?.trim() === "") {
+
             setToastmsg("For autoFill, first fill the name of the anime");
             return;
         }
         setLoading(true)
         const response = await fetch(`https://kitsu.io/api/edge/anime?filter[text]=${animeNameRef.current.value}`)
-        
+
         const data = await response.json();
-        const info = data.data[0].attributes
-        console.log(info)
+        if (!data) {
+            setLoading(false)
+            return;
+        }
+        const info = data?.data[0]?.attributes
+        if (!info) {
+            setLoading(false)
+            return;
+        }
 
         setRatingState(Math.round(info.averageRating))
         imageLinks.push(info.coverImage.original || info.coverImage.large)
@@ -316,31 +390,48 @@ const Post = () => {
         setImageCreditsState("anilist, MAL")
         setSourceState("Crunchyroll", "kitsuAnime api")
         setReleaseDateState(info.startDate)
-        setRecTitleState("Top 10 Animes like "+ animeNameRef.current.value)
+        setRecTitleState("Top 10 Animes like " + animeNameRef.current.value)
         setAgeRatingState(info.ageRating)
-        
+
+        setLoading(false)
+
     }
 
     const eraseForm = () => {
-        alert("coming soon, for now just reload the website")
+        setRatingState("")
+        setImageCreditsState("")
+        setDescState("")
+        setEpisodesState("")
+        setDurationState("")
+        setFormatState("")
+        setSourceState("")
+        setReleaseDateState("")
+        setRecTitleState("")
+        setAgeRatingState("")
+        setImageLinks([])
+        setTagsList([])
+        setTag("")
+        setStudioState("")
+        setLink("")
+
     }
- 
+
     return (<div className="max-w-screen min-w-[40vw]" >
         {loading && <AdminLoader />}
         <form onSubmit={SavePost} >
             <div className="flex flex-col w-fit gap-3 border p-10 rounded text-dark ">
                 <div className="flex justify-between" >
                     <div className="relative inline-block group">
-                        <button disabled={loading} type="submit" className={`border rounded px-1 hover:bg-green-900 ${!loading &&"hover:scale-105 active:scale-90"} ease-linear duration-75  bg-dark`} ><Save color="lightGreen"/></button>
+                        <button disabled={loading} type="submit" className={`border rounded px-1 hover:bg-green-900 ${!loading && "hover:scale-105 active:scale-90"} ease-linear duration-75  bg-dark`} ><Save color="lightGreen" /></button>
 
                         {!loading && <p className="hidden absolute w-20 rounded text-sm bg-secondary px-1 top-[-1rem] left-[110%] z-20 text-desc group-hover:block" >Save this anime</p>}
                     </div>
 
                     <div className="relative inline-block group">
-                        <button 
-                        onClick={AutoFill}
-                        disabled={loading}
-                        type="button" className={`border hover:bg-amber-900 rounded px-1 hover:scale-105 ease-linear duration-75 active:scale-90 bg-secondary `} ><Workflow color="orange"/></button>
+                        <button
+                            onClick={AutoFill}
+                            disabled={loading}
+                            type="button" className={`border hover:bg-amber-900 rounded px-1 hover:scale-105 ease-linear duration-75 active:scale-90 bg-secondary `} ><Workflow color="orange" /></button>
 
                         <p className="hidden absolute w-20 rounded text-sm bg-secondary px-1 top-[-1rem] left-[110%] text-desc group-hover:block" >Auto fill</p>
                     </div>
@@ -359,17 +450,15 @@ const Post = () => {
                     <input type="text" ref={animeNameRef} placeholder="name" name="name" className={`px-2 max-w-52 py-1 mt-2 rounded`} />
 
                     <AnimeInput placeholder="rating" state={ratingState} setState={setRatingState} />
-                    
-                    <AnimeInput placeholder="duration" state={durationState} setState={setDurationState} />
-                
+
                     <AnimeInput placeholder="format" state={formatState} setState={setFormatState} />
-                  
+
                     <AnimeInput placeholder="episodes" state={episodesState} setState={setEpisodesState} />
 
                     <AnimeInput placeholder="duration" state={durationState} setState={setDurationState} />
-                    
-                    <AnimeInput placeholder="imageCredits" state={imageCreditsState} setState={imageCreditsState} />
-                   
+
+                    <AnimeInput placeholder="imageCredits" state={imageCreditsState} setState={setImageCreditsState} />
+
                     <AnimeInput placeholder="source" state={sourceState} setState={setSourceState} />
 
                     <AnimeInput placeholder="studio" state={studioState} setState={setStudioState} />
@@ -388,9 +477,9 @@ const Post = () => {
                 </div>
 
                 <div className="flex gap-2 max-w-52">
-                    <input ref={linkRef} type="text" placeholder="image link " className="max-w-[80%] px-2 py-1 rounded" />
+                    <input value={link} onChange={(e) => setLink(e.target.value)} type="text" placeholder="image link " className="max-w-[80%] px-2 py-1 rounded" />
 
-                    <button type="button" className="max-w-[20%] active:scale-75 hover:scale-110 duration-75 ease-linear" onClick={() => setImageLinks(prev => [...prev, linkRef.current?.value])} ><Plus color="green" /></button>
+                    <button type="button" className="max-w-[20%] active:scale-75 hover:scale-110 duration-75 ease-linear" onClick={() => setImageLinks(prev => [...prev, link])} ><Plus color="green" /></button>
                 </div>
 
 
@@ -417,6 +506,6 @@ const Post = () => {
 }
 
 
-const AnimeInput = ({placeholder,state, setState}) => {
+const AnimeInput = ({ placeholder, state, setState }) => {
     return (<input value={state} onChange={(e) => setState(e.target.value)} type="text" placeholder={placeholder} name={placeholder} className={`px-2 max-w-52 py-1 mt-2 rounded`} />)
 }

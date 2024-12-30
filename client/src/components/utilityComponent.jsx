@@ -1,7 +1,7 @@
 import { Link, Trash } from "lucide-react"
 
-export const Input = ({ placeholder, limitSize=true, ...p }) => {
-    return <input type="text" {...p} placeholder={placeholder} name={placeholder} className={`px-2 ${limitSize && "max-w-52"}py-1 mt-2 rounded`} />
+export const Input = ({ placeholder, size="large", limitSize=true, ...p }) => {
+    return <input type="text" {...p} placeholder={placeholder} name={placeholder} className={`px-2 ${limitSize && "max-w-52"}py-1 mt-2 rounded  ${size!="large" && 'max-w-48'}`} />
 }
 
 
