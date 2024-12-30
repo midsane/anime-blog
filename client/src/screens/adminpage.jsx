@@ -95,7 +95,6 @@ const ArticleMenu = () => {
     const ChangeDebounce = () => {
         const currentTime = Date.now();
      
-        console.log(currentTime - debounce)
         if (currentTime - debounce >= 500){
             setDebounce(currentTime)
             
@@ -317,7 +316,7 @@ const Post = () => {
         setImageCreditsState("anilist, MAL")
         setSourceState("Crunchyroll", "kitsuAnime api")
         setReleaseDateState(info.startDate)
-        setRecTitleState("Top 10 Animes like "+ animeNameRef.current.val)
+        setRecTitleState("Top 10 Animes like "+ animeNameRef.current.value)
         setAgeRatingState(info.ageRating)
         
     }
@@ -403,7 +402,10 @@ const Post = () => {
                             setTag(e.target.value)
                         }} className="bg-slate-300 max-w-[80%] text-dark rounded px-2 py-1" ></input>
                         <div className="active:scale-95 p-1 bg-primary w-fit rounded" onClick={() => {
-                            setTagsList(prev => [...prev, Tag])
+                            setTagsList(prev => {
+                                const tagList = Tag.split(" ");
+                                return [...prev, ...tagList]
+                            })
                             setTag("")
                         }} ><Plus size={20} color="black" /></div>
                     </div>
