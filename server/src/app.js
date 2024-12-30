@@ -233,7 +233,6 @@ app.post(
         },
       ]);
 
-      console.log(articleData);
       if (!articleData) {
         throw new ApiError(500, "could not find article details");
       }

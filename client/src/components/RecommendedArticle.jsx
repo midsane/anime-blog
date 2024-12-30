@@ -3,9 +3,6 @@ import { useRecoilValue } from 'recoil'
 import { CurrentPageArticlesAtom } from '../atoms/atoms'
 import { useNavigate } from 'react-router-dom'
 import { ArticlesCarousel } from './carouselarticle'
-import { AdminLoader } from './loader'
-
-
 
 export function RecommendedArticles() {
     

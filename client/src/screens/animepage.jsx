@@ -15,6 +15,7 @@ export function AnimePage () {
     const setToastMsg = useSetRecoilState(toastMsgAtom)
     const [loading, setLoading] = useState(true)
     const {articleTitle} = useParams()
+
     useEffect(() => {
         const getArticleInfo = async () => {
           try {
@@ -57,33 +58,35 @@ export function AnimePage () {
                 >
                     {articleInfo?.title}
                 </motion.h1>
-                <motion.p
-                    className="text-xl text-center text-desc mb-12"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                >
-                    {articleInfo?.intro}
-                </motion.p>
-
-                <motion.div className='h-80 w-full overflow-hidden rounded' >
+                <motion.div className='h-fit w-full overflow-hidden rounded' >
                     <motion.div
-                        className="h-[20%] text-primary"
+                        className="h-[20%] items-center flex gap-4 text-primary"
                         initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6, duration: 0.5 }}
                     >
                         <AnimeLogo />
+                        <p>{articleInfo?.title.slice(19,articleInfo?.title.length)}</p>
                     </motion.div>
                     <div className='w-full h-[80%] overflow-hidden '>
                         <motion.img
                             initial={{ opacity: 0, y: 0 }}
                             animate={{ opacity: 1, y: -50 }}
-                            transition={{ delay: 0.6, duration: 0.5 }}
-                            className='w-full' src={articleInfo?.bannerImgLink} />
+                            transition={{ delay: 0.3, duration: 0.5 }}
+                            className='w-full rounded' src={articleInfo?.bannerImgLink} />
                     </div>
                     
                 </motion.div>
+
+                <motion.p
+                    className="text-xl text-center text-desc mb-10 mt-5"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.5 }}
+                >
+                    {articleInfo?.intro}
+                </motion.p>
+
 
                 <motion.div
                     className="flex flex-col bg-dark text-desc gap-3 p-8 rounded mb-12"
@@ -93,7 +96,7 @@ export function AnimePage () {
                 >
                     <h3>Anime List in this article:</h3>
                     {articleInfo?.List?.map((a, i) => {
-                        return <div className='flex gap-2' ><ChevronRight /> <p>{a.name}</p></div>
+                        return <div key={i} className='flex gap-2' ><ChevronRight /> <p>{a.name}</p></div>
                     })}
 
                 </motion.div>

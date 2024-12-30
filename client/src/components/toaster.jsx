@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 export const Toast = ({ message, onClose }) => {
     useEffect(() => {
@@ -8,7 +9,7 @@ export const Toast = ({ message, onClose }) => {
         return () => clearTimeout(timeout)
     }, [])
     return (
-        <div
+        createPortal(<div
             className="fixed top-5 right-5 z-50  bg-blue-500 text-white p-4 rounded-md shadow-lg"
             style={{ transition: 'opacity 0.5s' }}
         >
@@ -20,7 +21,7 @@ export const Toast = ({ message, onClose }) => {
             >
                 &times;
             </button>
-        </div>
+        </div>, document.getElementById('root'))
     );
 };
 

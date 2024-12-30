@@ -10,40 +10,10 @@ export default function HomePage(){
 
     const [currentPage, setCurrentPage] = useState(1)
     const numberOfArticle = useRecoilValue(numberOfArticlesAtom)
-    const setLatestArticle = useSetRecoilState(latestArticleAtom)
     const setCurrentPageArticle = useSetRecoilState(CurrentPageArticlesAtom)
     const [loading, setLoading] = useState(false)
  
-    useEffect(() => {
-        const getLatestArticle = async () => {
-            setLoading(true)
-            try {
-                let limit = 5
-                let offset = Math.max(numberOfArticle - limit,0)
-
-               
-                if(numberOfArticle == 0) return;
-                limit = Math.min(limit, numberOfArticle)
-            
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-article?limit=${limit}&offset=${offset}`);
-
-                if (!response.ok) {
-                    console.log(response)
-                    return
-                }
-
-                const data = await response.json()
-                console.log("latest article ", data.message)
-                setLatestArticle(data.message)
-                setLoading(false)
-            } catch (error) {
-                console.log(error)
-                return
-            }
-        }
-        getLatestArticle()
-    }, [numberOfArticle])
-
+   
     useEffect(() => {
     
         setLoading(true)
@@ -57,7 +27,7 @@ export default function HomePage(){
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}get-all-article?limit=${limit}&offset=${offset}`);
 
                 if (!response.ok) {
-                    console.log(response)
+                
                     return
                 }
 
@@ -65,7 +35,7 @@ export default function HomePage(){
                 setCurrentPageArticle(data.message)
                 setLoading(false)
             } catch (error) {
-                console.log(error)
+              
                 return
             }
         }

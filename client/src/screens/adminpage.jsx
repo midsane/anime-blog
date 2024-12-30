@@ -94,11 +94,11 @@ const ArticleMenu = () => {
 
     const ChangeDebounce = () => {
         const currentTime = Date.now();
-        console.log("search anime changed")
+     
         console.log(currentTime - debounce)
         if (currentTime - debounce >= 500){
             setDebounce(currentTime)
-            console.log("debounce changed")
+            
         }
             
     }
@@ -155,12 +155,13 @@ const ShowAnimes = ({animeLoading=false, List, tab }) => {
                 },
                 body: JSON.stringify({ title, bannerImgLink, intro, List:listData })
             })
-            if(!response.ok || response.status >= 300){
-                setToastMsg(response.message || "could not save article")
-            }
+          
             const data = await response.json()
-            if(data.statusCode >= 300){
+            if (data.statusCode >= 300){
+     
                 setToastMsg(data.data || "could not save article")
+                setLoading(false)
+                return
             }
             setToastMsg("successfully save the article " + data.message.title)
             setLoading(false)
@@ -276,13 +277,9 @@ const Post = () => {
                     },
                     body: JSON.stringify(anime)
                 })
-                if(!response.ok || response.status >= 300){
-                    setToastmsg(response?.message || "cannot save this anime")
-                    setLoading(false)
-                    return;
-                }
+           
                 const data = await response.json()
-                console.log(data)
+                
                 if(data.statusCode >= 300){
                     setToastmsg(data?.data || "cannot save this anime")
                     setLoading(false)

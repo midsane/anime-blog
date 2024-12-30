@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AnimeLogo } from './animelogo';
 
 const navItems = [
-    { name: 'Home', href: './' },
+    { name: 'Home', href: '/' },
     { name: 'About', href: 'https://aniifax.blogspot.com/?fbclid=PAZXh0bgNhZW0CMTEAAabJdYiBw_-OVb1dSL6albspLer6Z8UbYbBX-vAgTDjJ9wM05ft66pbLKVI_aem_2Z_M2c2_foSkoUCymGN1Ug' },
     { name: 'Contact', href: 'mailto:garbar.mamla.he.com' },
     { name: 'Login', href: '/login' }
