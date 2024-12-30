@@ -8,6 +8,7 @@ import Footer from "../components/footer";
 import { Toast } from "../components/toaster";
 import { AdminLoader } from "../components/loader";
 import { Goup } from "../components/Goup";
+import { SnowEffect } from "../components/snowyeffect";
 export function RootLayout({children}){
   
     const [toastMsg, setToastMsg] = useRecoilState(toastMsgAtom)
@@ -82,6 +83,7 @@ export function RootLayout({children}){
 
     return(<div className="w-screen min-h-screen overflow-hidden">
         {loading && <AdminLoader />}
+        <SnowEffect />
         <Goup />
         {toastMsg !== "" &&
             <Toast message={toastMsg} onClose={() => setToastMsg("")} />}
