@@ -8,5 +8,5 @@ export const Goup = () => {
             behavior: 'smooth'
         });
     };
-    return(createPortal(<div onClick={handleClick} className="fixed w-14 h-14 rounded-full cursor-pointer active:scale-90 hover:scale-105 bg-secondary flex justify-center items-center bottom-20 right-20 z-40" ><ChevronUp size={30} color='yellow' /></div>, document.getElementById('root')))
+    return(createPortal(<div onClick={handleClick} className="fixed w-10 border border-dark aspect-square sm:w-14 rounded-full cursor-pointer active:scale-90 hover:scale-105 bg-secondary flex justify-center items-center bottom-5 right-5 z-40" ><ChevronUp size={30} color='yellow' /></div>, document.getElementById('root')))
 }

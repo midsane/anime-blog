@@ -41,7 +41,7 @@ export function AnimePage () {
           }
         }
         getArticleInfo()
-    }, [])
+    }, [articleTitle])
 
    
  
