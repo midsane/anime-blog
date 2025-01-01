@@ -43,9 +43,10 @@ const verifyToken = (req, res, next) => {
   next();
 };
 
-app.get("/ping", () => {
+app.get("/ping", (req,res) => {
   const time = getExactTime();
   console.log(`got successfully pinged at ${time}`);
+  res.status(201).json({ msg: `got successfully pinged at ${time}` });
 });
 
 app.post("/admin", verifyToken, (req, res) => {
