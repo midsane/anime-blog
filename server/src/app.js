@@ -185,10 +185,7 @@ app.get(
       res.status(200).json(
         new ApiResponse(
           200,
-          {
-            articles: allArticles,
-            totalArticles,
-          },
+          allArticles,
           "Fetched all the articles successfully"
         )
       );
