@@ -158,38 +158,49 @@ app.get(
   "/get-all-article",
   asyncHandler(async (req, res) => {
     const offset = parseInt(req.query.offset) || 0;
-    const limit = parseInt(req.query.limit) || 10;
+    let limit = parseInt(req.query.limit);
 
-    if (offset < 0 || limit <= 0) {
+    if (offset < 0 || (limit && limit <= 0)) {
       throw new ApiError(400, "Invalid offset or limit value");
     }
 
     try {
+      
+      const totalArticles = await Article.countDocuments();
+
+      if (!limit) {
+        limit = totalArticles - offset;
+        if (limit < 0) limit = 0; 
+      }
+
       const allArticles = await Article.find({})
         .skip(offset)
         .limit(limit)
         .select("bannerImgLink title intro");
+
       if (!allArticles) {
-        throw new ApiError(500, "could not find all articles");
+        throw new ApiError(500, "Could not find articles");
       }
 
-      res
-        .status(201)
-        .json(
-          new ApiResponse(
-            200,
-            allArticles,
-            "fetched all the articles successfully"
-          )
-        );
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          {
+            articles: allArticles,
+            totalArticles,
+          },
+          "Fetched all the articles successfully"
+        )
+      );
     } catch (error) {
       throw new ApiError(
         500,
-        error.message || error.msg || "could not find all articles"
+        error.message || error.msg || "Could not fetch articles"
       );
     }
   })
 );
+
 
 app.post(
   "/article/:title",
