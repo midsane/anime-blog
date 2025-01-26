@@ -17,12 +17,15 @@ export function RecommendedArticles() {
     return (
         <>
             <Helmet>
+                <meta charSet='utf-8' />
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
-                <meta property="og:title" content={pageTitle} />
-                <meta property="og:description" content={pageDescription} />
+                <meta name="title" content={pageTitle} />
+                <meta name="description" content={pageDescription} />
                 <meta property="og:image" content={pageImage} />
                 <meta property="og:type" content="article" />
+                <meta rel="canonical" href={window.location.href} />
+                <meta name="keywords" content={`${articleInfo?.title}, anime, anime recommendations, ${articleInfo?.List?.map(a => a.name).join(", ")}`} />
             </Helmet>
 
             <ArticlesCarousel title="Latest Articles" />

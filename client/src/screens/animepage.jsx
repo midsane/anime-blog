@@ -54,13 +54,15 @@ export function AnimePage() {
     return (
         <>
             <Helmet>
+                <meta charSet='utf-8' />
                 <title>{articleInfo?.title || "Anime Page"}</title>
                 <meta name="description" content={articleInfo?.intro || "Explore amazing anime articles and recommendations"} />
                 <meta name="keywords" content={`${articleInfo?.title}, anime, anime recommendations, ${articleInfo?.List?.map(a => a.name).join(", ")}`} />
                 <meta property="og:title" content={articleInfo?.title} />
-                <meta property="og:description" content={articleInfo?.intro} />
+                <meta property="description" content={articleInfo?.intro} />
                 <meta property="og:image" content={articleInfo?.bannerImgLink} />z
                 <meta property="og:type" content="article" />
+                <meta rel="canonical" href={window.location.href} />
             </Helmet>
             <main className="relative min-h-screen sm:p-8 p-2">
                 {loading && <AdminLoader />}

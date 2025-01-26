@@ -1,57 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://topanimes.vercel.app/</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/login</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Admin</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Solo Leveling</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Kage no Jitsuryokusha ni Naritakute</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Dandadan</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Blue lock</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like One Piece</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Ao no Hako</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Arifureta Shokugyou de Sekai Saikyou</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Overlord</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Tate no Yuusha no Nariagari</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Sword Art Online</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Re:Zero kara Hajimeru Isekai Seikatsu</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like KONOSUBA -God's blessing on this wonderful world!</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Mushoku Tensei: Isekai Ittara Honki Dasu</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Death Note</loc>
-  </url>
-  <url>
-    <loc>https://topanimes.vercel.app/Top 10 Animes like Tokyo Revengers</loc>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<url>
+<loc>https://topanimes.vercel.app/</loc>
+<lastmod>2025-01-26T15:33:28+00:00</lastmod>
+</url>
 </urlset>

@@ -48,7 +48,7 @@ export default function HomePage(){
         <Helmet>
             <title>top animes</title>
             <meta name="description" content="Latest trendy animes, Get similar animes like your favourite ones here" />
-            <link ref="canonical" href="/" />
+            <meta rel="canonical" href={window.location.href} />  
         </Helmet>
         <main className="flex flex-col" >
             {loading && <AdminLoader />}
