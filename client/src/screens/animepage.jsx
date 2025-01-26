@@ -55,6 +55,7 @@ export function AnimePage() {
         <>
             <Helmet>
                 <meta charSet='utf-8' />
+                <link rel="canonical" href="https://topanimes.midsane.tech/" />
                 <title>{articleInfo?.title || "Anime Page"}</title>
                 <meta name="description" content={articleInfo?.intro || "Explore amazing anime articles and recommendations"} />
                 <meta name="keywords" content={`${articleInfo?.title}, anime, anime recommendations, ${articleInfo?.List?.map(a => a.name).join(", ")}`} />

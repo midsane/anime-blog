@@ -47,6 +47,7 @@ export default function HomePage(){
     return(<>
         <Helmet>
             <title>top animes</title>
+            <link rel="canonical" href="https://topanimes.midsane.tech/" />
             <meta name="description" content="Latest trendy animes, Get similar animes like your favourite ones here" />
             <meta rel="canonical" href={window.location.href} />  
         </Helmet>
