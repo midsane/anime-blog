@@ -4,6 +4,7 @@ import { RecommendedArticles } from "../components/RecommendedArticle";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { CurrentPageArticlesAtom, latestArticleAtom, numberOfArticlesAtom } from "../atoms/atoms";
 import { AdminLoader } from "../components/loader";
+import { Helmet } from "react-helmet-async";
 
 const PAGE_LIMIT = 6;
 export default function HomePage(){
@@ -43,9 +44,16 @@ export default function HomePage(){
     }, [currentPage, numberOfArticle])
 
 
-    return(<main className="flex flex-col" >
-        {loading && <AdminLoader />}
-        <RecommendedArticles />
-        <Pagination currentPage={currentPage} totalPages={Math.ceil(numberOfArticle/PAGE_LIMIT)} onPageChange={setCurrentPage}/>
-    </main>)
+    return(<>
+        <Helmet>
+            <title>top animes</title>
+            <meta name="description" content="Latest trendy animes, Get similar animes like your favourite ones here" />
+            <link ref="canonical" href="/" />
+        </Helmet>
+        <main className="flex flex-col" >
+            {loading && <AdminLoader />}
+            <RecommendedArticles />
+            <Pagination currentPage={currentPage} totalPages={Math.ceil(numberOfArticle / PAGE_LIMIT)} onPageChange={setCurrentPage} />
+        </main>
+    </>)
 }
