@@ -25,7 +25,7 @@ export function RecommendedArticles() {
                 <meta property="og:image" content={pageImage} />
                 <meta property="og:type" content="article" />
                 <meta rel="canonical" href={window.location.href} />
-                <meta name="keywords" content={`${articleInfo?.title}, anime, anime recommendations, ${articleInfo?.List?.map(a => a.name).join(", ")}`} />
+                <meta name="keywords" content={pageTitle} />
             </Helmet>
 
             <ArticlesCarousel title="Latest Articles" />
