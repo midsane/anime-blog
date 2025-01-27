@@ -30,6 +30,24 @@ export function RecommendedArticles() {
             </Helmet>
 
             <ArticlesCarousel title="Latest Articles" />
+            <script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7224854598785257"
+                crossOrigin="anonymous"
+            ></script>
+            {/* Add1 */}
+            <ins
+                className="adsbygoogle"
+                style={{ display: 'block' }}
+                data-ad-client="ca-pub-7224854598785257"
+                data-ad-slot="8731333880"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+            ></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({ });
+            </script>
+
 
             <section className="mt-20" aria-labelledby="browse-articles-title">
                 <motion.h2
