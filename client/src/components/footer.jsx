@@ -6,7 +6,25 @@ const Footer = () => {
     const opacity = useTransform(scrollYProgress, [0.7, 1], [0, 1]);
     const y = useTransform(scrollYProgress, [0.7, 1], [50, 0]);
 
-    return (
+    return (<>
+
+        <>
+            <script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7224854598785257"
+                crossOrigin="anonymous"
+            ></script>
+            <ins
+                className="adsbygoogle"
+                style={{ display: "block", textAlign: "center" }}
+                data-ad-layout="in-article"
+                data-ad-format="fluid"
+                data-ad-client="ca-pub-7224854598785257"
+                data-ad-slot="4311343774"
+            ></ins>
+            <script dangerouslySetInnerHTML={{ __html: `(adsbygoogle = window.adsbygoogle || []).push({ });` }}></script>
+        </>
+
         <motion.footer
             className="bg-dark text-desc py-8"
             style={{ opacity, y }}
@@ -17,7 +35,7 @@ const Footer = () => {
                         <h3 className="text-primary text-2xl font-bold mb-2">Top Animes</h3>
                         <p className="text-sm text-gray-400">Your go-to source for all Top animes</p>
                     </div>
-                   
+
                     <div className="w-full md:w-1/3">
                         <h4 className="text-lg font-semibold mb-2 ">Connect With Us</h4>
                         <div className="flex space-x-4">
@@ -44,6 +62,9 @@ const Footer = () => {
                 </div>
             </div>
         </motion.footer>
+    </>
+
+
     );
 };
 
