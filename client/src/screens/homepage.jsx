@@ -16,6 +16,11 @@ export default function HomePage(){
  
    
     useEffect(() => {
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     
         setLoading(true)
         const getCurrentPageArticle = async () => {
