@@ -25,7 +25,7 @@ export function RecommendedArticles() {
                 <meta property="og:image" content={pageImage} />
                 <meta property="og:type" content="article" />
                 <meta rel="canonical" href={window.location.href} />
-                <link rel="canonical" href="https://topanimes.midsane.tech/" />
+                <link rel="canonical" href="https://www.topanimes.midsane.tech/" />
                 <meta name="keywords" content={pageTitle} />
             </Helmet>
 
