@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {ZoomIn, ZoomOut, ChevronRight, ChevronLeft} from "lucide-react"
 
 export function ImageCarousel({ images, alt }) {
-    const [currentIndex, setCurrentIndex] = useState(0)
+    const [currentIndex, setCurrentIndex] = useState(images.length-1)
     const [isZoomed, setIsZoomed] = useState(false)
 
     const nextImage = () => {
